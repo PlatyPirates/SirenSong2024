@@ -24,7 +24,7 @@ import frc.robot.Constants.IntakeConstants;
 
 public class RightClaw extends SubsystemBase {
 
-  private CANSparkMax _rightClawMotor = new CANSparkMax(Constants.ClimberConstants.leftClawMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax _rightClawMotor = new CANSparkMax(Constants.ClimberConstants.rightClawMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
   private final RelativeEncoder _encoder = _rightClawMotor.getEncoder();
   private double _rightClawMotorPower = Constants.ClimberConstants.rightClawMotorPower;
 
