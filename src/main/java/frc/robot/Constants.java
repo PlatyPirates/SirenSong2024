@@ -18,8 +18,8 @@ public final class Constants {
 
   public static final class DrivetrainConstants {
     //according to CAN IDs
-    public static final int frontLeftMotor = 1;
-    public static final int frontRightMotor = 2;
+    public static final int frontLeftMotor = 2;
+    public static final int frontRightMotor = 1;
     public static final int backLeftMotor = 3;
     public static final int backRightMotor = 4;
 
