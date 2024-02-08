@@ -44,9 +44,9 @@ public final class Constants {
     public static double mobilityDistance = 3.8;
   }
   public static final class ClimberConstants{
-    public static final int rightClawMotor = 7;
+    public static final int rightClawMotor = 5;
     public static final double rightClawMotorPower = .2;
-    public static final int leftClawMotor = 8;
+    public static final int leftClawMotor = 6;
     public static final double leftClawMotorPower = .2;
     
     //figure out how to get the limits set up
@@ -57,10 +57,10 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int intakeMotor = 5;
-    public static final double intakeMotorPower = 0.5;
-    public static final int pivotMotor = 6;
-    public static final double pivotMotorPower = 0.2;
+    //public static final int intakeMotor = 5;
+    //public static final double intakeMotorPower = 0.5;
+    //public static final int pivotMotor = 6;
+    //public static final double pivotMotorPower = 0.2;
     //public static final int armMotor = 7;
     //public static final double armMotorPower = 0.2;
 
