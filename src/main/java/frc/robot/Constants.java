@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -45,12 +44,16 @@ public final class Constants {
     public static double mobilityDistance = 3.8;
   }
   public static final class ClimberConstants{
-    public static final int rightClawMotor = 8;
+    public static final int rightClawMotor = 7;
     public static final double rightClawMotorPower = .2;
-    public static final int leftClawMotor = 9;
+    public static final int leftClawMotor = 8;
     public static final double leftClawMotorPower = .2;
-
+    
     //figure out how to get the limits set up
+    public static final float rightClawLimitIn = 0.0f;//figure ths out
+    public static final float rightClawLimitOut = 0.0f; // this will be negated in the subsystem because negative means out
+    public static final float leftClawLimitIn = 0.0f; //figure this out too
+    public static final float leftClawLimitOut = 0.0f;
   }
 
   public static final class IntakeConstants {
@@ -58,8 +61,8 @@ public final class Constants {
     public static final double intakeMotorPower = 0.5;
     public static final int pivotMotor = 6;
     public static final double pivotMotorPower = 0.2;
-    public static final int armMotor = 7;
-    public static final double armMotorPower = 0.2;
+    //public static final int armMotor = 7;
+    //public static final double armMotorPower = 0.2;
 
     public static final float pivotLimitIn = 0.0f;
     public static final float pivotLimitOut = 28.0f; // this will be negated in the subsystem because negative means out
