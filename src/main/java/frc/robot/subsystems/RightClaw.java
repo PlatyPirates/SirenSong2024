@@ -19,8 +19,7 @@ import com.revrobotics.RelativeEncoder;
 //import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ClimberConstants;
 
 public class RightClaw extends SubsystemBase {
 
@@ -35,9 +34,9 @@ public class RightClaw extends SubsystemBase {
     _rightClawMotor.restoreFactoryDefaults();
     _rightClawMotor.setIdleMode(IdleMode.kBrake);
     _rightClawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    _rightClawMotor.setSoftLimit(SoftLimitDirection.kReverse, IntakeConstants.armLimitIn);
+    _rightClawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
     _rightClawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    _rightClawMotor.setSoftLimit(SoftLimitDirection.kForward, IntakeConstants.armLimitOut);
+    _rightClawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
     _rightClawMotor.burnFlash();
   }
   public void stop() {
