@@ -9,8 +9,8 @@ import com.revrobotics.RelativeEncoder;
 //import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -32,7 +32,7 @@ public class Drive_Train extends SubsystemBase {
   private RelativeEncoder _leftEncoder;
   private RelativeEncoder _rightEncoder;
 
-  //private DifferentialDriveOdometry _odometry;
+  private DifferentialDriveOdometry _odometry;
 
   private Pose2d _pose;
 
@@ -69,7 +69,7 @@ public class Drive_Train extends SubsystemBase {
 
     encoderReset();
 
-    // _odometry = new DifferentialDriveOdometry(
+    //  _odometry = new DifferentialDriveOdometry(
     //     Rotation2d.fromDegrees(-_gyro.getAngle()), -_leftEncoder.getPosition(), -_rightEncoder.getPosition());
 
     _bLMotor.burnFlash();

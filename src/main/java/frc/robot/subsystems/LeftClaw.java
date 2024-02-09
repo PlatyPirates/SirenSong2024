@@ -62,7 +62,7 @@ public class LeftClaw extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left motor encoder value: ", _encoder.getPosition());
+    SmartDashboard.putNumber("Left encoder: ", _encoder.getPosition());
   }
   
   /**

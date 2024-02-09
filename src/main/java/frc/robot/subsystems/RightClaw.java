@@ -66,7 +66,7 @@ public class RightClaw extends SubsystemBase {
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
-    SmartDashboard.putNumber("Right motor encoder value: ", _encoder.getPosition());
+    SmartDashboard.putNumber("Right encoder: ", _encoder.getPosition());
   }
   
   /**
