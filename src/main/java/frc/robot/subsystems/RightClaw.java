@@ -5,6 +5,6 @@ import frc.robot.Constants;
 public class RightClaw extends Claw {
 
     public RightClaw() {
-        super(Constants.ClimberConstants.rightClawMotorPower);
+        super(Constants.ClimberConstants.rightClawMotorPower, Constants.ClimberConstants.rightClawMotor);
     }
 }

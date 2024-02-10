@@ -23,12 +23,14 @@ import frc.robot.Constants.ClimberConstants;
 
 public abstract class Claw extends SubsystemBase {
 
-  private CANSparkMax clawMotor = new CANSparkMax(Constants.ClimberConstants.rightClawMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
-  private final RelativeEncoder encoder = clawMotor.getEncoder();
+  private CANSparkMax clawMotor;
+  private final RelativeEncoder encoder;
   private double dClawMotorPower = 0;
 
-  public Claw(double dMotorPower) {
+  public Claw(double dMotorPower, int iMotor) {
     dClawMotorPower = dMotorPower;
+    clawMotor = new CANSparkMax(iMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+    encoder = clawMotor.getEncoder();
     setDefaultCommand(new RunCommand(this::stop, this));
 
     //set up right claw motor settings
