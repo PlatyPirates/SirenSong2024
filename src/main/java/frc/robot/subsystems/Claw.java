@@ -26,20 +26,22 @@ public abstract class Claw extends SubsystemBase {
   private CANSparkMax clawMotor;
   private final RelativeEncoder encoder;
   private double dClawMotorPower = 0;
+  private final String sEncoderName;
 
-  public Claw(double dMotorPower, int iMotor) {
+  public Claw(double dMotorPower, int iMotor, String encoderName) {
     dClawMotorPower = dMotorPower;
     clawMotor = new CANSparkMax(iMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
     encoder = clawMotor.getEncoder();
+    sEncoderName = encoderName;
     setDefaultCommand(new RunCommand(this::stop, this));
 
     //set up right claw motor settings
     clawMotor.restoreFactoryDefaults();
     clawMotor.setIdleMode(IdleMode.kBrake);
-    // clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    // clawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
-    // clawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    // clawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
+    //clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    //clawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
+    //clawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    //clawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
     clawMotor.burnFlash();
   }
   public void stop() {
@@ -65,7 +67,7 @@ public abstract class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
-    SmartDashboard.putNumber("Right encoder: ", encoder.getPosition());
+    SmartDashboard.putNumber(sEncoderName, encoder.getPosition());
   }
   
   /**
