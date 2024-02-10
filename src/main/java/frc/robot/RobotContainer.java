@@ -65,19 +65,23 @@ public class RobotContainer {
   private void configureBindings() {
     _operator
       .leftBumper()
-      .whileTrue(Commands.runOnce(() -> _leftClaw.ClawUp(), _leftClaw));
+      .whileTrue(new RunCommand(_leftClaw::ClawUp, _leftClaw));
+      //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawUp(), _leftClaw));
     
     _operator
       .rightBumper()
-      .whileTrue(Commands.runOnce(() -> _rightClaw.ClawUp(), _rightClaw));
+      .whileTrue(new RunCommand(_rightClaw::ClawUp, _rightClaw));
+      //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawUp(), _rightClaw));
     
     _operator
-      .leftTrigger(ClimberConstants.leftTriggerThreshold)
-      .whileTrue(Commands.runOnce(() -> _leftClaw.ClawDown(), _leftClaw));
+      .leftTrigger()
+      .whileTrue(new RunCommand(_leftClaw::ClawDown, _leftClaw));
+      //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawDown(), _leftClaw));
     
     _operator
-      .rightTrigger(ClimberConstants.rightTriggerThreshold)
-      .whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
+      .rightTrigger()
+      .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
+      //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
   }
 
   /**
