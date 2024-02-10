@@ -25,7 +25,7 @@ public class LeftClawDown extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _leftClaw.leftClawDown();
+    _leftClaw.ClawDown();
   }
 
   // Called once the command ends or is interrupted.

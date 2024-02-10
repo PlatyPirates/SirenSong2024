@@ -25,7 +25,7 @@ public class LeftClawUp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _leftClaw.leftClawUp();
+    _leftClaw.ClawUp();
   }
 
   // Called once the command ends or is interrupted.

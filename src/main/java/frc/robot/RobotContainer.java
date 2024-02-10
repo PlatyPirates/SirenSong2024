@@ -4,16 +4,20 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.OperatorConstants;
 //import frc.robot.commands.Autos;
 import frc.robot.subsystems.LeftClaw;
 import frc.robot.subsystems.RightClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
 import frc.robot.commands.ArcadeDrive;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.event.EventLoop;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,17 +33,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive_Train _drive_Train = new Drive_Train();
-  private final Joystick _driver = new Joystick(0);
-  private final Joystick _operator = new Joystick(1);
+  //private final Joystick _driver = new Joystick(0);
+  //private final Joystick _operator = new Joystick(1);
+  private final CommandXboxController _driver = new CommandXboxController(0);
+  private final CommandXboxController _operator = new CommandXboxController(1);
 
   private final LeftClaw _leftClaw = new LeftClaw();
-  private final RightClaw _rightClaw = new RightClaw();
+  private final Claw _rightClaw = new RightClaw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    _drive_Train.setDefaultCommand(new ArcadeDrive(_drive_Train, _driver));
+    _drive_Train.setDefaultCommand(
+      Commands.run(
+        () ->
+            _drive_Train.drive(
+                -_driver.getLeftY(), -_driver.getRightX()),
+        _drive_Train));
   }
 
   /**
@@ -52,30 +63,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    //configure when have commands
-    // new JoystickButton(_operator, JoystickConstants.BUMPER_RIGHT)
-    //   .onTrue(new InstantCommand(() -> _bootyIntake.setState(BootyState.CubeIntake)))
-    //   .onFalse(new InstantCommand(() -> _bootyIntake.setState(BootyState.CubeHold))); 
-    // new JoystickButton(_operator, JoystickConstants.BUMPER_LEFT)
-    //   .onTrue(new InstantCommand(() -> _bootyIntake.setState(BootyState.ConeIntake)))
-    //   .onFalse(new InstantCommand(() -> _bootyIntake.setState(BootyState.ConeHold)));
+    _operator
+      .leftBumper()
+      .whileTrue(Commands.runOnce(() -> _leftClaw.ClawUp(), _leftClaw));
     
-    new JoystickButton(_operator, JoystickConstants.BUMPER_RIGHT).whileTrue(new RunCommand(_rightClaw::rightClawUp, _rightClaw));
-    new JoystickButton(_operator, JoystickConstants.RIGHT_TRIGGER).whileTrue(new RunCommand(_rightClaw::rightClawDown,_rightClaw));
-    new JoystickButton(_operator, JoystickConstants.BUMPER_LEFT).whileTrue(new RunCommand(_leftClaw::leftClawUp, _leftClaw));
-    new JoystickButton(_operator, JoystickConstants.LEFT_TRIGGER).whileTrue(new RunCommand(_leftClaw::leftClawDown, _leftClaw));
-      //new JoystickButton(_operator, JoystickConstants.Y).whileTrue(new RunCommand(_fourBarArms::armOut, _fourBarArms));
-    // new JoystickButton(_operator, JoystickConstants.A).whileTrue(new RunCommand(_fourBarArms::armIn, _fourBarArms));
-    // new JoystickButton(_operator, JoystickConstants.X).whileTrue(new RunCommand(_intakePivot::pivotUp, _intakePivot));
-    // new JoystickButton(_operator, JoystickConstants.B).whileTrue(new RunCommand(_intakePivot::pivotDown, _intakePivot));
+    _operator
+      .rightBumper()
+      .whileTrue(Commands.runOnce(() -> _rightClaw.ClawUp(), _rightClaw));
     
-    // new Trigger(m_dualClaw::exampleCondition)
-    //     .onTrue(new LeftClaw(m_dualClaw));
-
-    // // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // // cancelling on release.
-    // m_driverController.b().whileTrue(m_dualClaw.exampleMethodCommand());
+    _operator
+      .leftTrigger(ClimberConstants.leftTriggerThreshold)
+      .whileTrue(Commands.runOnce(() -> _leftClaw.ClawDown(), _leftClaw));
+    
+    _operator
+      .rightTrigger(ClimberConstants.rightTriggerThreshold)
+      .whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
   }
 
   /**
