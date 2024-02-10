@@ -36,10 +36,10 @@ public abstract class Claw extends SubsystemBase {
     //set up right claw motor settings
     clawMotor.restoreFactoryDefaults();
     clawMotor.setIdleMode(IdleMode.kBrake);
-    clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    clawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
-    clawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    clawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
+    // clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    // clawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
+    // clawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    // clawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
     clawMotor.burnFlash();
   }
   public void stop() {
