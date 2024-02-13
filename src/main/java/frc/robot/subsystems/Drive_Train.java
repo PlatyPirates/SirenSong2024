@@ -88,8 +88,8 @@ public class Drive_Train extends SubsystemBase {
   }
 
   public void teleopDrive(Joystick driveControl) {
-    double forward = applyDeadband(driveControl.getRawAxis(JoystickConstants.LEFT_STICK_Y));
-    double turn = applyDeadband(driveControl.getRawAxis(JoystickConstants.RIGHT_STICK_X));
+    double forward = applyCubic(driveControl.getRawAxis(JoystickConstants.LEFT_STICK_Y));
+    double turn = applyCubic(driveControl.getRawAxis(JoystickConstants.RIGHT_STICK_X));
 
     // might need to be inverted
     _drive.arcadeDrive(forward, turn);
@@ -104,6 +104,9 @@ public class Drive_Train extends SubsystemBase {
       return 0.0;
     else
       return (value - Math.copySign(0.1, value)) / (1 - JoystickConstants.deadband);
+  }
+  private double applyCubic(double value){
+    return Math.pow(value, 3);
   }
 
   @Override
