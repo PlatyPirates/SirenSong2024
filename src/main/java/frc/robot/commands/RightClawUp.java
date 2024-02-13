@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.RightClaw;
+import frc.robot.subsystems.Claw;
 
 public class RightClawUp extends Command {
-  private final RightClaw _rightClaw;
+  private final Claw _rightClaw;
 
   /** Creates a new PivotUp. */
-  public RightClawUp(RightClaw rightClaw) {
+  public RightClawUp(Claw rightClaw) {
     _rightClaw = rightClaw;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +25,7 @@ public class RightClawUp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _rightClaw.rightClawUp();
+    _rightClaw.ClawUp();
   }
 
   // Called once the command ends or is interrupted.
