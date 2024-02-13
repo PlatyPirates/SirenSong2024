@@ -48,9 +48,6 @@ public final class Constants {
     public static final double rightClawMotorPower = .2;
     public static final int leftClawMotor = 6;
     public static final double leftClawMotorPower = .2;
-
-    public static final double leftTriggerThreshold = 0.4;
-    public static final double rightTriggerThreshold = 0.4;
     
     //figure out how to get the limits set up
     public static final float rightClawLimitIn = 1000f;//figure ths out
