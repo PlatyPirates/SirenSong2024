@@ -47,12 +47,13 @@ public class RobotContainer {
   private final Claw _rightClaw = new RightClaw();
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
+  private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    setUpNetworkTable();
+    netInst = NetworkTableInstance.getDefault();
     _drive_Train.setDefaultCommand(
       Commands.run(
         () ->
@@ -97,13 +98,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
   */ 
-  private void setUpNetworkTable(){
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    centerTagX = inst.getDoubleTopic("/datatable/center_of_amp_X");
-    centerImageX = inst.getIntegerTopic("/datatable/center_of_image_X");
-  }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new AutonomousDrive(_drive_Train, centerTagX, centerImageX);
+    return new AutonomousDrive(_drive_Train, netInst);
   }
 }
