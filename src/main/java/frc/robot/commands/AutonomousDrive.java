@@ -50,10 +50,10 @@ public class AutonomousDrive extends Command {
             _drive.drive(0.2, 0);
         } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
             // Robot drives to the left
-            _drive.drive(0.2, -0.1);
+            _drive.drive(0, -0.2);
         } else if((long)centerTagX > centerImageX) { // if the tag is right of center
             // Robot drives to the right
-            _drive.drive(0.2,0.1);
+            _drive.drive(0,0.2);
         } else {
             System.out.println("Undefined autonomous drive behavior");
         }
