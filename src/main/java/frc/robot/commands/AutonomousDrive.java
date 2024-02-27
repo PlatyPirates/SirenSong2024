@@ -23,6 +23,7 @@ public class AutonomousDrive extends Command {
         _centerImageX = centerImageX;
         tagSub = _centerTagX.subscribe(-1);
         imageSub = _centerImageX.subscribe(-1);
+
         addRequirements(drive);
     }
     // Called when the command is initially scheduled.
@@ -35,12 +36,20 @@ public class AutonomousDrive extends Command {
         double centerTagX = tagSub.get();
         long centerImageX = imageSub.get();
 
-        if(Math.abs(centerImageX-(long)centerTagX) <= tolerance){
+        if (centerTagX <= 0) { // if there is no tag detected
+            // Robot does not move
+            _drive.drive(0,0);
+        } else if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) { // if there is a tag in the center of video
+            // Robot drives forward
             _drive.drive(0.2, 0);
-        } else if ((centerImageX-(long)centerTagX) > tolerance){
-            _drive.drive(0, -0.1);
-        } else if(((long)centerTagX-centerImageX) > tolerance){
-            _drive.drive(0,0.1);
+        } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
+            // Robot drives to the left
+            _drive.drive(0.2, -0.1);
+        } else if((long)centerTagX > centerImageX) { // if the tag is right of center
+            // Robot drives to the right
+            _drive.drive(0.2,0.1);
+        } else {
+            System.out.println("Undefined autonomous drive behavior");
         }
     }
     // Called once the command ends or is interrupted.
