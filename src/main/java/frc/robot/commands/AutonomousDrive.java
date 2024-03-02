@@ -47,13 +47,13 @@ public class AutonomousDrive extends Command {
             _drive.drive(0,0);
         } else if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) { // if there is a tag in the center of video
             // Robot drives forward
-            _drive.drive(0.2, 0);
+            _drive.drive(0.25, 0);
         } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
             // Robot drives to the left
-            _drive.drive(0, -0.2);
+            _drive.drive(0, -0.35);
         } else if((long)centerTagX > centerImageX) { // if the tag is right of center
             // Robot drives to the right
-            _drive.drive(0,0.2);
+            _drive.drive(0,0.35);
         } else {
             System.out.println("Undefined autonomous drive behavior");
         }
