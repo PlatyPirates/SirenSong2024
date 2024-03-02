@@ -13,6 +13,11 @@ import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.AutonomousDrive;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.IntegerTopic;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.event.EventLoop;
 //import com.kauailabs.navx.frc.AHRS;
@@ -40,11 +45,15 @@ public class RobotContainer {
 
   private final LeftClaw _leftClaw = new LeftClaw();
   private final Claw _rightClaw = new RightClaw();
+  private DoubleTopic centerTagX;
+  private IntegerTopic centerImageX;
+  private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    netInst = NetworkTableInstance.getDefault();
     _drive_Train.setDefaultCommand(
       Commands.run(
         () ->
@@ -88,10 +97,9 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   
+  */ 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(dualClaw);
+    return new AutonomousDrive(_drive_Train, netInst);
   }
-  */
 }
