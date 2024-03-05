@@ -4,35 +4,29 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.JoystickConstants;
-import frc.robot.Constants.OperatorConstants;
 //import frc.robot.commands.Autos;
 import frc.robot.subsystems.LeftClaw;
 import frc.robot.subsystems.RightClaw;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
 import frc.robot.subsystems.Flap;
 import frc.robot.subsystems.Intake;
-import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.FlapDown;
 import frc.robot.commands.FlapUp;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.IntakeReverse;
+import frc.robot.commands.LeftClawDown;
+import frc.robot.commands.LeftClawUp;
+import frc.robot.commands.RightClawDown;
+import frc.robot.commands.RightClawUp;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.event.EventLoop;
+
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -50,11 +44,10 @@ public class RobotContainer {
   private final CommandXboxController _operator = new CommandXboxController(1);
 
   private final LeftClaw _leftClaw = new LeftClaw();
-  private final Claw _rightClaw = new RightClaw();
+  private final RightClaw _rightClaw = new RightClaw();
   private final Flap _flap = new Flap();
   private final Intake _intake = new Intake();
-  private DoubleTopic centerTagX;
-  private IntegerTopic centerImageX;
+
   private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -82,22 +75,22 @@ public class RobotContainer {
   private void configureBindings() {
     _operator
       .leftBumper()
-      .whileTrue(new RunCommand(_leftClaw::ClawUp, _leftClaw));
+      .whileTrue(new LeftClawUp(_leftClaw));
       //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawUp(), _leftClaw));
     
     _operator
       .rightBumper()
-      .whileTrue(new RunCommand(_rightClaw::ClawUp, _rightClaw));
+      .whileTrue(new RightClawUp(_rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawUp(), _rightClaw));
     
     _operator
       .leftTrigger()
-      .whileTrue(new RunCommand(_leftClaw::ClawDown, _leftClaw));
+      .whileTrue(new LeftClawDown(_leftClaw));
       //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawDown(), _leftClaw));
     
     _operator
       .rightTrigger()
-      .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
+      .whileTrue(new RightClawDown(_rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
 
     _operator
