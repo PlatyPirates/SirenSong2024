@@ -10,28 +10,28 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
-  private final CANSparkMax _shooterMotor = new CANSparkMax(Constants.ShooterConstants.shooterMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax _intakeMotor = new CANSparkMax(Constants.ShooterConstants.intakeMotor, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
 
-  private RelativeEncoder _shooterEncoder;
+  private RelativeEncoder _intakeEncoder;
 
-  public Shooter() {
-    _shooterMotor.restoreFactoryDefaults();
+  public Intake() {
+    _intakeMotor.restoreFactoryDefaults();
     enableOpenLoopRampRate(true);
-    _shooterEncoder = _shooterMotor.getEncoder();
+    _intakeEncoder = _intakeMotor.getEncoder();
     encoderReset();
-    _shooterMotor.burnFlash();
+    _intakeMotor.burnFlash();
   }
 
   public void enableOpenLoopRampRate(boolean enable) {
     double rampRate = (enable ? Constants.DrivetrainConstants.rampRate : 0.0);
 
-    _shooterMotor.setOpenLoopRampRate(rampRate);
+    _intakeMotor.setOpenLoopRampRate(rampRate);
   }
 
-  public void setShooter(double power) {
-    _shooterMotor.set(power);
+  public void setIntake(double power) {
+    _intakeMotor.set(power);
   }
 
   @Override
@@ -39,10 +39,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public void encoderReset() {
-    _shooterEncoder.setPosition(0.0);
+    _intakeEncoder.setPosition(0.0);
   }
 
   public double getPosition() {
-    return _shooterEncoder.getPosition();
+    return _intakeEncoder.getPosition();
   }
 }
