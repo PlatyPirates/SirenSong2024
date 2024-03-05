@@ -71,21 +71,28 @@ public final class Constants {
   }
 
   public static final class JoystickConstants {
-        //Controllers
-        public static final int DRIVER_PORT = 0;
-        public static final int OPERATOR_PORT = 1;
+    //Controllers
+    public static final int DRIVER_PORT = 0;
+    public static final int OPERATOR_PORT = 1;
             
-        //XboxOne Joysticks (axes)
-        public static final int LEFT_STICK_X = 0;
-        public static final int LEFT_STICK_Y = 1;
-        public static final int RIGHT_STICK_X = 4;
-        public static final int RIGHT_STICK_Y = 5;
+    //XboxOne Joysticks (axes)
+    public static final int LEFT_STICK_X = 0;
+    public static final int LEFT_STICK_Y = 1;
+    public static final int RIGHT_STICK_X = 4;
+    public static final int RIGHT_STICK_Y = 5;
 
-        public static final double deadband = 0.1;
+    public static final double deadband = 0.1;
         
 
   }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+  public static final class ShooterConstants {
+    public static final int shooterMotor = 5; // This is also on the CAN bus, so needs a unique id relative to the drive train motors
+    public static final double shooterMotorPower = .2;
+    public static final int trapMotor = 0; // The PWM channel number. 0-9 are on-board, 10-19 are on the MXP port
+    public static final double trapMotorPower = .2;
   }
 }
