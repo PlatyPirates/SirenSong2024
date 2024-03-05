@@ -90,7 +90,7 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int intakeMotor = 5; // This is also on the CAN bus, so needs a unique id relative to the drive train motors
+    public static final int intakeMotor = 7; // This is also on the CAN bus, so needs a unique id relative to the drive train motors
     public static final double intakeMotorPower = .2;
     public static final int flapMotor = 0; // The PWM channel number. 0-9 are on-board, 10-19 are on the MXP port
     public static final double flapForwardPower = 1.62;
