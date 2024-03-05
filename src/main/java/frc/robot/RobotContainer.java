@@ -12,8 +12,14 @@ import frc.robot.subsystems.LeftClaw;
 import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
+import frc.robot.subsystems.Flap;
+import frc.robot.subsystems.Intake;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.FlapDown;
+import frc.robot.commands.FlapUp;
+import frc.robot.commands.IntakeForward;
+import frc.robot.commands.IntakeReverse;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTable;
@@ -45,6 +51,8 @@ public class RobotContainer {
 
   private final LeftClaw _leftClaw = new LeftClaw();
   private final Claw _rightClaw = new RightClaw();
+  private final Flap _flap = new Flap();
+  private final Intake _intake = new Intake();
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private NetworkTableInstance netInst;
@@ -91,6 +99,23 @@ public class RobotContainer {
       .rightTrigger()
       .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
+
+    _operator
+      .a()
+      .whileTrue(new FlapDown(_flap));
+
+    _operator
+      .b()
+      .whileTrue(new FlapUp(_flap));
+
+    _operator
+      .x()
+      .whileTrue(new IntakeReverse(_intake));
+
+    _operator
+      .y()
+      .whileTrue(new IntakeForward(_intake));
+
   }
 
   /**
