@@ -10,7 +10,8 @@ import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Drive_Train;
 import frc.robot.subsystems.Flap;
 import frc.robot.subsystems.Intake;
-import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.AMoveEnd;
+import frc.robot.commands.*;
 import frc.robot.commands.FlapDown;
 import frc.robot.commands.FlapUp;
 import frc.robot.commands.IntakeForward;
@@ -22,7 +23,8 @@ import frc.robot.commands.RightClawUp;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -48,6 +50,8 @@ public class RobotContainer {
   private final Flap _flap = new Flap();
   private final Intake _intake = new Intake();
 
+  private SendableChooser<Command> _chooser = new SendableChooser<Command>();
+
   private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -61,6 +65,14 @@ public class RobotContainer {
             _drive_Train.drive(
                 -_driver.getLeftY(), -_driver.getRightX()),
         _drive_Train));
+
+      _chooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
+      _chooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
+      _chooser.addOption("Score In Amp (Red)", new AAmpRed(_drive_Train,netInst));
+
+
+      SmartDashboard.putData("Auto choices", _chooser);
+
   }
 
   /**
@@ -118,6 +130,6 @@ public class RobotContainer {
   */ 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new AutonomousDrive(_drive_Train, netInst);
+    return _chooser.getSelected();
   }
 }
