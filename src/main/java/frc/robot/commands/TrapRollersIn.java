@@ -3,13 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.subsystems.Trap_Rollers;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class BottomIntakeOut extends Command {
-  /** Creates a new BottomIntakeOut. */
-  public BottomIntakeOut() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class TrapRollersIn extends Command {
+  /** Creates a new IntakeIn. */ 
+  private final Trap_Rollers _bottomIntake; 
+
+  public TrapRollersIn(Trap_Rollers bottomIntake) {
+    _bottomIntake = bottomIntake;
+    // Use addRequirements() here to declare subsystem dependencies
+    addRequirements(_bottomIntake);
   }
 
   // Called when the command is initially scheduled.

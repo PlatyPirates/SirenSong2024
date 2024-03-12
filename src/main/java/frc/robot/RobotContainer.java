@@ -12,6 +12,9 @@ import frc.robot.subsystems.LeftClaw;
 import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
+import frc.robot.subsystems.Intake_Belt; 
+import frc.robot.subsystems.Intake_Bar; 
+import frc.robot.subsystems.Trap_Rollers; 
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDrive;
 import edu.wpi.first.networktables.DoubleTopic;
@@ -45,6 +48,9 @@ public class RobotContainer {
 
   private final LeftClaw _leftClaw = new LeftClaw();
   private final Claw _rightClaw = new RightClaw();
+  private final Intake_Bar _intakeBar = new Intake_Bar();
+  private final Intake_Belt _intakeBelt = new Intake_Belt();
+  private final Trap_Rollers _trapRollers = new Trap_Rollers();
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private NetworkTableInstance netInst;
@@ -91,6 +97,14 @@ public class RobotContainer {
       .rightTrigger()
       .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
+    _operator 
+      .x()
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBar))
+      .whileTrue(new RunCommand(_intakeBelt::IntakeBeltIn, _intakeBelt));
+    _operator 
+      .y()
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBar))
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBelt));
   }
 
   /**

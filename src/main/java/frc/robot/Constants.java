@@ -57,8 +57,12 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    //public static final int intakeMotor = 5;
-    //public static final double intakeMotorPower = 0.5;
+    public static final int intakeBarMotor = 7;
+    public static final double intakeBarMotorPower = 0.5;
+    public static final int intakeBeltMotor = 8;
+    public static final double intakeBeltMotorPower = 0.5;
+    public static final int trapRollerMotor = 9;
+    public static final double trapRollerMotorPower = 0.5;
     //public static final int pivotMotor = 6;
     //public static final double pivotMotorPower = 0.2;
     //public static final int armMotor = 7;

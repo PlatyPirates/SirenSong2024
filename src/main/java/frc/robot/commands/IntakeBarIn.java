@@ -4,12 +4,18 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.Intake_Bar;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class TopIntakeIn extends Command {
-  /** Creates a new TopIntakeIn. */
-  public TopIntakeIn() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class IntakeBarIn extends Command {
+  /** Creates a new IntakeIn. */ 
+  private final Intake_Bar _intakeBar; 
+
+  public IntakeBarIn(Intake_Bar intakeBar) {
+    _intakeBar = intakeBar;
+    // Use addRequirements() here to declare subsystem dependencies
+    addRequirements(_intakeBar);
   }
 
   // Called when the command is initially scheduled.

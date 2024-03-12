@@ -3,13 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.subsystems.Intake_Belt;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class BottomIntakeIn extends Command {
-  /** Creates a new BottomIntakeIn. */
-  public BottomIntakeIn() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class IntakeBeltOut extends Command {
+  /** Creates a new IntakeIn. */ 
+  private final Intake_Belt _outtake; 
+
+  public IntakeBeltOut(Intake_Belt outtake) {
+    _outtake = outtake;
+    // Use addRequirements() here to declare subsystem dependencies
+    addRequirements(_outtake);
   }
 
   // Called when the command is initially scheduled.
