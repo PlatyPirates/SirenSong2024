@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -30,7 +31,7 @@ public class AAmpRed extends Command {
     private final IntegerSubscriber numTargetsSub;
     private NetworkTableInstance ninst;
     private boolean autoRotate = true;
-
+    private boolean end =false;
 
     public AAmpRed(Drive_Train drive, NetworkTableInstance inst) {
         _drive = drive;
@@ -57,48 +58,58 @@ public class AAmpRed extends Command {
         double centerTagX = tagSub.get();
         long centerImageX = imageSub.get();
         long numTargets = numTargetsSub.get(); 
+        long starttime;
 
         while(Timer.getFPGATimestamp()-startTime<=1.0) {
             _drive.drive(0.5,0);
+            _drive.encoderReset();
         }
+
+        //Rotate until an amp target is visible
         if(numTargets == 0 && autoRotate) {
-            _drive.drive(0,0.3); 
+            SmartDashboard.putNumber("Left motor encoder",_drive.getLeftEncoder());
+            if(_drive.getLeftEncoder() < 1.7) {
+                _drive.drive(0,0.31); //NOTE Increase this number if it's struggling to turn, lower it if it's not recognizing the AprilTags
+            } else {
+                starttime = System.currentTimeMillis();
+                while(System.currentTimeMillis()-starttime<1000){
+                    _drive.drive(0.4,0); 
+                }
+                end = true;
+            }
         }
+
+        //When a target is visible, center it in the robot's field of vision and move towards it
         else {
             if (numTargets <= 0 || centerTagX <= 0) { // if there is no tag detected
                 // Robot does not move
                 _drive.drive(0,0);
             } else if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) { // if there is a tag in the center of video
                 // Robot drives forward
-                long starttime = System.currentTimeMillis();
+                starttime = System.currentTimeMillis();
                 autoRotate = false;
-                while(System.currentTimeMillis()-starttime<=250){
-                    SmartDashboard.putNumber("Start time",starttime);
-                    SmartDashboard.putNumber("Current time",System.currentTimeMillis());
-                    _drive.drive(0.22, 0);
+                while(System.currentTimeMillis()-starttime<=500){
+                    _drive.drive(0.37, 0);
                 }
                 SmartDashboard.putNumber("Start time",starttime);
-                SmartDashboard.putNumber("Current time",System.currentTimeMillis());
                 starttime = System.currentTimeMillis();
+
+                //If it loses sight of the target while it's driving towards it, adjust accordingly
                 if(numTargets == 0) {
                     while(System.currentTimeMillis()-starttime <= 500 && numTargets == 0) {
                         _drive.drive(0, 0.3);
                     }
                     starttime = System.currentTimeMillis();
-                    while(System.currentTimeMillis()-starttime <= 500 && numTargets == 0) {
+                    while(System.currentTimeMillis()-starttime <= 600 && numTargets == 0) {
                         _drive.drive(0, -0.3);
                     }
                 }
             } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
                 // Robot drives to the left
-                while(System.currentTimeMillis()-startTime<=100){
                     _drive.drive(0, -0.4);
-                }
             } else if((long)centerTagX > centerImageX) { // if the tag is right of center
                 // Robot drives to the right
-                while(System.currentTimeMillis()-startTime<=100){
                     _drive.drive(0, 0.4);
-                }
             } else {
                 System.out.println("Undefined autonomous drive behavior");
             }
@@ -113,7 +124,7 @@ public class AAmpRed extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return end;
     }
 
 }
