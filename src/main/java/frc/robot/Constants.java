@@ -55,7 +55,6 @@ public final class Constants {
     public static final float leftClawLimitIn = -190f; //figure this out too
     public static final float leftClawLimitOut = 190f;
   }
-
   public static final class IntakeConstants {
     public static final int intakeBarMotor = 7;
     public static final double intakeBarMotorPower = 0.3;
