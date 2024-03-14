@@ -65,6 +65,15 @@ public class Intake_Bar extends SubsystemBase {
     return encoder.getPosition();
   }
 
+  public void TrapBar(){
+    if (frc.robot.subsystems.Limit_Switch.limitSwitch.get() == true){
+      bottomIntakeMotor.set(-bottomIntakeMotorPower);
+    }
+    else {
+      bottomIntakeMotor.stopMotor();
+    }
+  }
+
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here

@@ -9,14 +9,18 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.OperatorConstants;
 //import frc.robot.commands.Autos;
 import frc.robot.subsystems.LeftClaw;
+import frc.robot.subsystems.Limit_Switch;
 import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive_Train;
 import frc.robot.subsystems.Intake_Belt; 
 import frc.robot.subsystems.Intake_Bar; 
 import frc.robot.subsystems.Trap_Rollers; 
+import frc.robot.commands.TrapBelt;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.DetectSwitch;
+import frc.robot.commands.LimitSwitch;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTable;
@@ -31,6 +35,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,8 +55,9 @@ public class RobotContainer {
   private final LeftClaw _leftClaw = new LeftClaw();
   private final Claw _rightClaw = new RightClaw();
   private final Intake_Bar _intakeBar = new Intake_Bar();
-  private final Intake_Belt _intakeBelt = new Intake_Belt();
+  private final Intake_Belt _intakeBelt = new Intake_Belt(){};
   private final Trap_Rollers _trapRollers = new Trap_Rollers();
+  private final Limit_Switch _limitSwitch = new Limit_Switch(0);
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private NetworkTableInstance netInst;
@@ -66,6 +73,7 @@ public class RobotContainer {
             _drive_Train.drive(
                 -_driver.getLeftY(), -_driver.getRightX()),
         _drive_Train));
+    new LimitSwitch(_limitSwitch).schedule();
   }
 
   /**
@@ -97,16 +105,27 @@ public class RobotContainer {
       .rightTrigger()
       .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
-    _operator 
-      .x()
-      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBar))
+    //intake
+      _operator 
+      .b()
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarIn, _intakeBar))
       .whileTrue(new RunCommand(_intakeBelt::IntakeBeltIn, _intakeBelt));
-    _operator 
+    //outtake amp 
+      _operator 
+      .x()
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarIn, _intakeBar))
+      .whileTrue(new RunCommand(_intakeBelt::IntakeBeltOut, _intakeBelt));
+    //y for getting it up there 
+      _operator 
       .y()
-      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBar))
-      .whileTrue(new RunCommand(_intakeBar::IntakeBarOut, _intakeBelt));
+      .whileTrue(new RunCommand(_intakeBelt::TrapBelt, _intakeBelt))
+      .whileTrue(new RunCommand(_intakeBar::TrapBar, _intakeBar))
+      .whileTrue(new RunCommand(_trapRollers::TrapScoreRollers, _trapRollers));
+      //A for shooting (digital input limit switch)
+      _operator 
+      .a()
+      .whileTrue(new RunCommand(_trapRollers::TrapRollersIn, _trapRollers));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

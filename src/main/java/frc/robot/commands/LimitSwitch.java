@@ -3,30 +3,28 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-import frc.robot.subsystems.Trap_Rollers;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Limit_Switch;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants; 
 
-public class TrapRollersIn extends Command {
-  /** Creates a new IntakeIn. */ 
-  private final Trap_Rollers _bottomIntake; 
-  public DigitalInput limitSwitch; 
-  public TrapRollersIn(Trap_Rollers bottomIntake) {
-    _bottomIntake = bottomIntake;
-    // Use addRequirements() here to declare subsystem dependencies
-    addRequirements(_bottomIntake);
+public class LimitSwitch extends Command {
+  private final Limit_Switch _limitSwitch;
+  /** Creates a new LimitSwitch. */
+  public LimitSwitch(Limit_Switch limitSwitch) {
+    _limitSwitch = limitSwitch;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    SmartDashboard.putBoolean("Limit Switch State", _limitSwitch.isPressed());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

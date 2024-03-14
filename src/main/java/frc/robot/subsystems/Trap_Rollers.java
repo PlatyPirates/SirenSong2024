@@ -27,38 +27,47 @@ import frc.robot.Constants;
 public class Trap_Rollers extends SubsystemBase {
 
   //private CANSparkMax intakeMotor;
-  private final CANSparkMax topIntakeMotor = new CANSparkMax(Constants.IntakeConstants.trapRollerMotor, MotorType.kBrushless);
+  private final CANSparkMax trapRollerMotor = new CANSparkMax(Constants.IntakeConstants.trapRollerMotor, MotorType.kBrushless);
   private final RelativeEncoder encoder;
-  private double topIntakeMotorPower = Constants.IntakeConstants.trapRollerMotorPower;
+  private double trapRollerPower = Constants.IntakeConstants.trapRollerMotorPower;
   // private final String sEncoderName;
 
   public Trap_Rollers() {
     setDefaultCommand(new RunCommand(this::stop, this));
 
     //set up right claw motor settings
-    topIntakeMotor.restoreFactoryDefaults();
-    topIntakeMotor.setIdleMode(IdleMode.kBrake);
+    trapRollerMotor.restoreFactoryDefaults();
+    trapRollerMotor.setIdleMode(IdleMode.kBrake);
     //clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
     //clawMotor.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightClawLimitIn);
     //clawMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     //clawMotor.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.rightClawLimitOut);
-    topIntakeMotor.burnFlash();
-    encoder = topIntakeMotor.getEncoder();
+    trapRollerMotor.burnFlash();
+    encoder = trapRollerMotor.getEncoder();
   }
   public void stop() {
-    topIntakeMotor.stopMotor();
+    trapRollerMotor.stopMotor();
   }
 
   public void TrapRollersIn() {
-    topIntakeMotor.set(topIntakeMotorPower);
+    trapRollerMotor.set(trapRollerPower);
   }
 
   public void TrapRollersOut() {
-    topIntakeMotor.set(-topIntakeMotorPower); 
+    trapRollerMotor.set(-trapRollerPower); 
   }
 
   public void SetTrapRollerPower(double intakePower) {
-    topIntakeMotor.set(intakePower);
+    trapRollerMotor.set(intakePower);
+  }
+
+  public void TrapScoreRollers(){
+    if (frc.robot.subsystems.Limit_Switch.limitSwitch.get() == true){
+      trapRollerMotor.set(trapRollerPower);
+    }
+    else {
+      trapRollerMotor.stopMotor();
+    }
   }
 
   public double getPosition () {

@@ -60,6 +60,15 @@ public abstract class Intake_Belt extends SubsystemBase {
     return encoder.getPosition();
   }
 
+  public void TrapBelt(){
+    if (frc.robot.subsystems.Limit_Switch.limitSwitch.get() == true){
+      beltIntakeMotor.set(-intakeMotorPower);
+    }
+    else {
+      beltIntakeMotor.stopMotor();
+    }
+  }
+
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
