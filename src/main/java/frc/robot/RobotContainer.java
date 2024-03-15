@@ -6,20 +6,17 @@ package frc.robot;
 
 //import frc.robot.commands.Autos;
 import frc.robot.subsystems.LeftClaw;
+import frc.robot.subsystems.Limit_Switch;
 import frc.robot.subsystems.RightClaw;
 import frc.robot.subsystems.Drive_Train;
+import frc.robot.subsystems.Intake_Belt; 
+import frc.robot.subsystems.Intake_Bar; 
+import frc.robot.subsystems.Trap_Rollers; 
 import frc.robot.subsystems.Flap;
 import frc.robot.subsystems.Intake;
-import frc.robot.commands.AMoveEnd;
+import frc.robot.subsystems.Claw;
 import frc.robot.commands.*;
-import frc.robot.commands.FlapDown;
-import frc.robot.commands.FlapUp;
-import frc.robot.commands.IntakeForward;
-import frc.robot.commands.IntakeReverse;
-import frc.robot.commands.LeftClawDown;
-import frc.robot.commands.LeftClawUp;
-import frc.robot.commands.RightClawDown;
-import frc.robot.commands.RightClawUp;
+
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,8 +25,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,12 +46,14 @@ public class RobotContainer {
   private final CommandXboxController _operator = new CommandXboxController(1);
 
   private final LeftClaw _leftClaw = new LeftClaw();
-  private final RightClaw _rightClaw = new RightClaw();
-  private final Flap _flap = new Flap();
-  private final Intake _intake = new Intake();
-
-  private SendableChooser<Command> _chooser = new SendableChooser<Command>();
-
+  private final Claw _rightClaw = new RightClaw();
+  private final Intake_Bar _intakeBar = new Intake_Bar();
+  private final Intake_Belt _intakeBelt = new Intake_Belt(){};
+  private final Trap_Rollers _trapRollers = new Trap_Rollers();
+  private final Limit_Switch _limitSwitch = new Limit_Switch(0);
+  private DoubleTopic centerTagX;
+  private IntegerTopic centerImageX;
+    private SendableChooser<Command> _chooser = new SendableChooser<Command>();
   private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -65,6 +67,7 @@ public class RobotContainer {
             _drive_Train.drive(
                 -_driver.getLeftY(), -_driver.getRightX()),
         _drive_Train));
+    new LimitSwitch(_limitSwitch).schedule();
 
       _chooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
       _chooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
@@ -102,27 +105,29 @@ public class RobotContainer {
     
     _operator
       .rightTrigger()
-      .whileTrue(new RightClawDown(_rightClaw));
+      .whileTrue(new RunCommand(_rightClaw::ClawDown, _rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawDown(), _rightClaw));
-
-    _operator
-      .a()
-      .whileTrue(new FlapDown(_flap));
-
-    _operator
+    //intake
+      _operator 
       .b()
-      .whileTrue(new FlapUp(_flap));
-
-    _operator
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarIn, _intakeBar))
+      .whileTrue(new RunCommand(_intakeBelt::IntakeBeltIn, _intakeBelt));
+    //outtake amp 
+      _operator 
       .x()
-      .whileTrue(new IntakeReverse(_intake));
-
-    _operator
+      .whileTrue(new RunCommand(_intakeBar::IntakeBarIn, _intakeBar))
+      .whileTrue(new RunCommand(_intakeBelt::IntakeBeltOut, _intakeBelt));
+    //y for getting it up there 
+      _operator 
       .y()
-      .whileTrue(new IntakeForward(_intake));
-
+      .whileTrue(new RunCommand(_intakeBelt::TrapBelt, _intakeBelt))
+      .whileTrue(new RunCommand(_intakeBar::TrapBar, _intakeBar))
+      .whileTrue(new RunCommand(_trapRollers::TrapScoreRollers, _trapRollers));
+      //A for shooting (digital input limit switch)
+      _operator 
+      .a()
+      .whileTrue(new RunCommand(_trapRollers::TrapRollersIn, _trapRollers));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

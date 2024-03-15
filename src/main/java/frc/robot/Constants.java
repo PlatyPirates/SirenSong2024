@@ -45,20 +45,24 @@ public final class Constants {
   }
   public static final class ClimberConstants{
     public static final int rightClawMotor = 5;
-    public static final double rightClawMotorPower = .2;
+    public static final double rightClawMotorPower = .4;
     public static final int leftClawMotor = 6;
-    public static final double leftClawMotorPower = .2;
+    public static final double leftClawMotorPower = .4;
     
     //figure out how to get the limits set up
-    public static final float rightClawLimitIn = 1000f;//figure ths out
-    public static final float rightClawLimitOut = 1000f; // this will be negated in the subsystem because negative means out
-    public static final float leftClawLimitIn = 1000f; //figure this out too
-    public static final float leftClawLimitOut = 1000f;
+    public static final float rightClawLimitIn = -190f;//figure ths out
+    public static final float rightClawLimitOut = 190f; // this will be negated in the subsystem because negative means out
+    public static final float leftClawLimitIn = -190f; //figure this out too
+    public static final float leftClawLimitOut = 190f;
   }
-
   public static final class IntakeConstants {
-    //public static final int intakeMotor = 5;
-    //public static final double intakeMotorPower = 0.5;
+    public static final int intakeBarMotor = 7;
+    public static final double intakeBarMotorPower = 0.3;
+    public static final int intakeBeltMotor = 8;
+    public static final double intakeBeltMotorPower = 0.3;
+    public static final int trapRollerMotor = 9;
+    public static final double trapRollerMotorPower = 0.3;
+    public static final int switchPort = 0; 
     //public static final int pivotMotor = 6;
     //public static final double pivotMotorPower = 0.2;
     //public static final int armMotor = 7;
@@ -89,11 +93,4 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static final class ShooterConstants {
-    public static final int intakeMotor = 7; // This is also on the CAN bus, so needs a unique id relative to the drive train motors
-    public static final double intakeMotorPower = .2;
-    public static final int flapMotor = 0; // The PWM channel number. 0-9 are on-board, 10-19 are on the MXP port
-    public static final double flapForwardPower = 1.62;
-    public static final double flapReversePower = 1.34;
-  }
 }
