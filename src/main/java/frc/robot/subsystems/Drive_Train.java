@@ -149,6 +149,17 @@ public class Drive_Train extends SubsystemBase {
     return -_leftEncoder.getPosition();
   }
 
+  public double getLeftEncoder() {
+    return -_leftEncoder.getPosition();
+  }
+  
+  public void stop(){
+    _fLMotor.stopMotor();
+    _fRMotor.stopMotor();
+    _bLMotor.stopMotor();
+    _bRMotor.stopMotor();
+  }
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(-_leftEncoder.getVelocity() / 60, -_rightEncoder.getVelocity() / 60);
   }
