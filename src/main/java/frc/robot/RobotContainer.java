@@ -5,16 +5,7 @@
 package frc.robot;
 
 //import frc.robot.commands.Autos;
-import frc.robot.subsystems.LeftClaw;
-import frc.robot.subsystems.Limit_Switch;
-import frc.robot.subsystems.RightClaw;
-import frc.robot.subsystems.Drive_Train;
-import frc.robot.subsystems.Intake_Belt; 
-import frc.robot.subsystems.Intake_Bar; 
-import frc.robot.subsystems.Trap_Rollers; 
-import frc.robot.subsystems.Flap;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
 import edu.wpi.first.networktables.DoubleTopic;
