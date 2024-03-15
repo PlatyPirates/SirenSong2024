@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.Drive_Train;
+import frc.robot.subsystems.*;
 
 public class AAmpRed extends Command {
 
@@ -32,9 +32,15 @@ public class AAmpRed extends Command {
     private NetworkTableInstance ninst;
     private boolean autoRotate = true;
     private boolean end =false;
+    private Intake_Bar intakeBar;
+    private Intake_Belt intakeBelt;
+    private Trap_Rollers trapRollers;
 
-    public AAmpRed(Drive_Train drive, NetworkTableInstance inst) {
+    public AAmpRed(Drive_Train drive, Intake_Bar inputIntakeBar, Intake_Belt inputIntakeBelt, Trap_Rollers inputTrapRollers, NetworkTableInstance inst) {
         _drive = drive;
+        intakeBar = inputIntakeBar;
+        intakeBelt = inputIntakeBelt;
+        trapRollers = inputTrapRollers;
         ninst = inst;
         // Use addRequirements() here to declare subsystem dependencies.
         centerTagXTopic = inst.getDoubleTopic("/datatable/center_of_amp_X");
@@ -76,14 +82,17 @@ public class AAmpRed extends Command {
                     autoRotate = false;
                     _drive.drive(0.4,0); 
                 }
+                starttime = System.currentTimeMillis();
+                while(System.currentTimeMillis()-starttime<2000){
+                    intakeBar.IntakeBarIn();
+                    intakeBelt.IntakeBeltIn();
+                }
                 _drive.encoderReset();
                 while(_drive.getLeftEncoder() < 0.525){
-                    autoRotate = false;
                     _drive.drive(0.1,-0.3); 
                 }
                 _drive.encoderReset();
                 while(_drive.getLeftEncoder() < 0.5){
-                    autoRotate = false;
                     _drive.drive(0.4,0.0); 
                 }
                 end = true;

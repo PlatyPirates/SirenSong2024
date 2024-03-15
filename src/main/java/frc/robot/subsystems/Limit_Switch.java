@@ -13,7 +13,7 @@ public class Limit_Switch extends SubsystemBase {
   public Limit_Switch(int channel) {
     limitSwitch = new DigitalInput(channel);
   }
-  public boolean isPressed(){
+  public static boolean isPressed(){
     return limitSwitch.get();
   }
   @Override

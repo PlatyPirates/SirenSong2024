@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Limit_Switch;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -31,7 +32,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -81,11 +82,20 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+  
+    m_robotContainer._drive_Train.setDefaultCommand(
+      Commands.run(
+        () ->
+        m_robotContainer._drive_Train.drive(
+                -m_robotContainer._driver.getLeftY(), m_robotContainer._driver.getRightX()),
+                m_robotContainer._drive_Train));
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    
   }
 
   @Override

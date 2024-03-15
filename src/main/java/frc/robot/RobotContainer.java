@@ -27,10 +27,10 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drive_Train _drive_Train = new Drive_Train();
+  public final Drive_Train _drive_Train = new Drive_Train();
   //private final Joystick _driver = new Joystick(0);
   //private final Joystick _operator = new Joystick(1);
-  private final CommandXboxController _driver = new CommandXboxController(0);
+  public final CommandXboxController _driver = new CommandXboxController(0);
   private final CommandXboxController _operator = new CommandXboxController(1);
 
   private final LeftClaw _leftClaw = new LeftClaw();
@@ -49,17 +49,12 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     netInst = NetworkTableInstance.getDefault();
-    _drive_Train.setDefaultCommand(
-      Commands.run(
-        () ->
-            _drive_Train.drive(
-                -_driver.getLeftY(), -_driver.getRightX()),
-        _drive_Train));
+    
     new LimitSwitch(_limitSwitch).schedule();
 
       _chooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
       _chooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
-      _chooser.addOption("Score In Amp (Red)", new AAmpRed(_drive_Train,netInst));
+      _chooser.addOption("Score In Amp (Red)", new AAmpRed(_drive_Train,_intakeBar, _intakeBelt, _trapRollers,netInst));
 
 
       SmartDashboard.putData("Auto choices", _chooser);

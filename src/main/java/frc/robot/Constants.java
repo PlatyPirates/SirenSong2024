@@ -50,9 +50,9 @@ public final class Constants {
     public static final double leftClawMotorPower = .4;
     
     //figure out how to get the limits set up
-    public static final float rightClawLimitIn = -190f;//figure ths out
+    public static final float rightClawLimitIn = -235f;//figure ths out
     public static final float rightClawLimitOut = 190f; // this will be negated in the subsystem because negative means out
-    public static final float leftClawLimitIn = -190f; //figure this out too
+    public static final float leftClawLimitIn = -235f; //figure this out too
     public static final float leftClawLimitOut = 190f;
   }
   public static final class IntakeConstants {
@@ -61,7 +61,7 @@ public final class Constants {
     public static final int intakeBeltMotor = 8;
     public static final double intakeBeltMotorPower = 0.3;
     public static final int trapRollerMotor = 9;
-    public static final double trapRollerMotorPower = 0.3;
+    public static final double trapRollerMotorPower = -0.3;
     public static final int switchPort = 0; 
     //public static final int pivotMotor = 6;
     //public static final double pivotMotorPower = 0.2;
