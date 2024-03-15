@@ -4,36 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.JoystickConstants;
-import frc.robot.Constants.OperatorConstants;
 //import frc.robot.commands.Autos;
-import frc.robot.subsystems.LeftClaw;
-import frc.robot.subsystems.Limit_Switch;
-import frc.robot.subsystems.RightClaw;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Drive_Train;
-import frc.robot.subsystems.Intake_Belt; 
-import frc.robot.subsystems.Intake_Bar; 
-import frc.robot.subsystems.Trap_Rollers; 
-import frc.robot.commands.TrapBelt;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.AutonomousDrive;
-import frc.robot.commands.DetectSwitch;
-import frc.robot.commands.LimitSwitch;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -60,6 +44,7 @@ public class RobotContainer {
   private final Limit_Switch _limitSwitch = new Limit_Switch(0);
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
+    private SendableChooser<Command> _chooser = new SendableChooser<Command>();
   private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -74,6 +59,14 @@ public class RobotContainer {
                 -_driver.getLeftY(), -_driver.getRightX()),
         _drive_Train));
     new LimitSwitch(_limitSwitch).schedule();
+
+      _chooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
+      _chooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
+      _chooser.addOption("Score In Amp (Red)", new AAmpRed(_drive_Train,netInst));
+
+
+      SmartDashboard.putData("Auto choices", _chooser);
+
   }
 
   /**
@@ -88,17 +81,17 @@ public class RobotContainer {
   private void configureBindings() {
     _operator
       .leftBumper()
-      .whileTrue(new RunCommand(_leftClaw::ClawUp, _leftClaw));
+      .whileTrue(new LeftClawUp(_leftClaw));
       //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawUp(), _leftClaw));
     
     _operator
       .rightBumper()
-      .whileTrue(new RunCommand(_rightClaw::ClawUp, _rightClaw));
+      .whileTrue(new RightClawUp(_rightClaw));
       //.whileTrue(Commands.runOnce(() -> _rightClaw.ClawUp(), _rightClaw));
     
     _operator
       .leftTrigger()
-      .whileTrue(new RunCommand(_leftClaw::ClawDown, _leftClaw));
+      .whileTrue(new LeftClawDown(_leftClaw));
       //.whileTrue(Commands.runOnce(() -> _leftClaw.ClawDown(), _leftClaw));
     
     _operator
@@ -133,6 +126,6 @@ public class RobotContainer {
   */ 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new AutonomousDrive(_drive_Train, netInst);
+    return _chooser.getSelected();
   }
 }
