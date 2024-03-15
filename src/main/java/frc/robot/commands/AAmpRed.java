@@ -69,11 +69,22 @@ public class AAmpRed extends Command {
         if(numTargets == 0 && autoRotate) {
             SmartDashboard.putNumber("Left motor encoder",_drive.getLeftEncoder());
             if(_drive.getLeftEncoder() < 1.7) {
-                _drive.drive(0,0.31); //NOTE Increase this number if it's struggling to turn, lower it if it's not recognizing the AprilTags
+                _drive.drive(0,0.31); //NOTE Increase this number if it's struggling to turn, lower it if it's not recognizing the AprilTags (not turning, slow turn)
             } else {
                 starttime = System.currentTimeMillis();
-                while(System.currentTimeMillis()-starttime<1000){
+                while(System.currentTimeMillis()-starttime<2000){
+                    autoRotate = false;
                     _drive.drive(0.4,0); 
+                }
+                _drive.encoderReset();
+                while(_drive.getLeftEncoder() < 0.525){
+                    autoRotate = false;
+                    _drive.drive(0.1,-0.3); 
+                }
+                _drive.encoderReset();
+                while(_drive.getLeftEncoder() < 0.5){
+                    autoRotate = false;
+                    _drive.drive(0.4,0.0); 
                 }
                 end = true;
             }
@@ -88,7 +99,7 @@ public class AAmpRed extends Command {
                 // Robot drives forward
                 starttime = System.currentTimeMillis();
                 autoRotate = false;
-                while(System.currentTimeMillis()-starttime<=500){
+                while(System.currentTimeMillis()-starttime<=600){
                     _drive.drive(0.37, 0);
                 }
                 SmartDashboard.putNumber("Start time",starttime);
