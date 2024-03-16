@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.*;
+import java.lang.Thread;
 
 public class AAmpRed extends Command {
 
@@ -50,52 +51,57 @@ public class AAmpRed extends Command {
         imageSub = centerImageXTopic.subscribe(-1);
         numTargetsSub = numTargetsTopic.subscribe(-1);
 
-        addRequirements(drive);
+        addRequirements(drive, inputIntakeBar, inputIntakeBelt, inputTrapRollers);
     }
     // Called when the command is initially scheduled.
     @Override
     public void initialize(){
         startTime = Timer.getFPGATimestamp();
+        _drive.encoderReset();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute(){
+    public void execute() {
         double centerTagX = tagSub.get();
         long centerImageX = imageSub.get();
-        long numTargets = numTargetsSub.get(); 
-        long starttime;
+        long numTargets = numTargetsSub.get();
+        double currentTime = Timer.getFPGATimestamp();
+        double timeElapsed = currentTime - startTime;
+        SmartDashboard.putNumber("Auto - Time Elapsed", timeElapsed);
 
-        while(Timer.getFPGATimestamp()-startTime<=1.0) {
+        if (timeElapsed <= 1.0) {
             _drive.drive(0.5,0);
-            _drive.encoderReset();
         }
 
         //Rotate until an amp target is visible
-        if(numTargets == 0 && autoRotate) {
+        else if (numTargets == 0 && autoRotate) {
             SmartDashboard.putNumber("Left motor encoder",_drive.getLeftEncoder());
-            if(_drive.getLeftEncoder() < 1.7) {
-                _drive.drive(0,0.31); //NOTE Increase this number if it's struggling to turn, lower it if it's not recognizing the AprilTags (not turning, slow turn)
-            } else {
-                starttime = System.currentTimeMillis();
-                while(System.currentTimeMillis()-starttime<2000){
-                    autoRotate = false;
-                    _drive.drive(0.4,0); 
+            if (timeElapsed < 2000)
+            {
+                if (_drive.getLeftEncoder() < 1.7) {
+                    _drive.drive(0,0.31); //NOTE Increase this number if it's struggling to turn, lower it if it's not recognizing the AprilTags (not turning, slow turn)
                 }
-                starttime = System.currentTimeMillis();
-                while(System.currentTimeMillis()-starttime<2000){
+                else {
+                    _drive.drive(0.4,0);
+                }
+            }
+            else
+            {
+                autoRotate = false;
+                if (timeElapsed < 4000) {
                     intakeBar.IntakeBarIn();
                     intakeBelt.IntakeBeltIn();
                 }
-                _drive.encoderReset();
-                while(_drive.getLeftEncoder() < 0.525){
-                    _drive.drive(0.1,-0.3); 
+                else {
+                    _drive.encoderReset();
+                    if (_drive.getLeftEncoder() < 0.525){
+                        _drive.drive(0.1,-0.3);
+                    }
+                    else if (_drive.getLeftEncoder() < 0.5) {
+                        _drive.drive(0.4,0.0);
+                    }
                 }
-                _drive.encoderReset();
-                while(_drive.getLeftEncoder() < 0.5){
-                    _drive.drive(0.4,0.0); 
-                }
-                end = true;
             }
         }
 
@@ -106,23 +112,9 @@ public class AAmpRed extends Command {
                 _drive.drive(0,0);
             } else if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) { // if there is a tag in the center of video
                 // Robot drives forward
-                starttime = System.currentTimeMillis();
                 autoRotate = false;
-                while(System.currentTimeMillis()-starttime<=600){
+                if (timeElapsed <= 600){
                     _drive.drive(0.37, 0);
-                }
-                SmartDashboard.putNumber("Start time",starttime);
-                starttime = System.currentTimeMillis();
-
-                //If it loses sight of the target while it's driving towards it, adjust accordingly
-                if(numTargets == 0) {
-                    while(System.currentTimeMillis()-starttime <= 500 && numTargets == 0) {
-                        _drive.drive(0, 0.3);
-                    }
-                    starttime = System.currentTimeMillis();
-                    while(System.currentTimeMillis()-starttime <= 600 && numTargets == 0) {
-                        _drive.drive(0, -0.3);
-                    }
                 }
             } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
                 // Robot drives to the left
