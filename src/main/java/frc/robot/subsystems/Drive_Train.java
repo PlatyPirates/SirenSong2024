@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -113,8 +114,8 @@ public class Drive_Train extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // SmartDashboard.putNumber("Left Encoder", -_leftEncoder.getPosition());
-    // SmartDashboard.putNumber("Right Encoder", -_rightEncoder.getPosition());
+    //SmartDashboard.putNumber("Left Encoder", System.currentTimeMillis());
+    //SmartDashboard.putNumber("Right Encoder", -_rightEncoder.getPosition());
 
     // SmartDashboard.putNumber("Angle", -_gyro.getAngle());
     // SmartDashboard.putNumber("Pitch", _gyro.getPitch());
@@ -150,9 +151,10 @@ public class Drive_Train extends SubsystemBase {
   }
 
   public double getLeftEncoder() {
+    _leftEncoder = _fLMotor.getEncoder();
     return -_leftEncoder.getPosition();
   }
-  
+
   public void stop(){
     _fLMotor.stopMotor();
     _fRMotor.stopMotor();

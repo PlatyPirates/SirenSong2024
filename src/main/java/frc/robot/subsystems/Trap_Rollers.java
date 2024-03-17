@@ -78,7 +78,7 @@ public class Trap_Rollers extends SubsystemBase {
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
-    SmartDashboard.putNumber("Trap Rollers", encoder.getPosition());
+    //SmartDashboard.putNumber("Trap Rollers", encoder.getPosition());
   }
 }
 

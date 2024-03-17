@@ -67,7 +67,7 @@ public abstract class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
-    SmartDashboard.putNumber(sEncoderName, encoder.getPosition());
+    //SmartDashboard.putNumber(sEncoderName, encoder.getPosition());
   }
   
   /**

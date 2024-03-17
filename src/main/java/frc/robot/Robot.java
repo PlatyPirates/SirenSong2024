@@ -12,6 +12,8 @@ import frc.robot.subsystems.Limit_Switch;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -62,6 +64,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    if(m_autonomousCommand instanceof AScoreInAmp){
+      ((AScoreInAmp)m_autonomousCommand).setAlliance(m_robotContainer.getAlliance());
+    }
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -95,7 +100,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    
+    SmartDashboard.putNumber("Encoder Position", m_robotContainer._drive_Train.getLeftEncoder());
   }
 
   @Override

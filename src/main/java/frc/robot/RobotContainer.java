@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-//import frc.robot.commands.Autos;
 import frc.robot.subsystems.*;
 
 /**
@@ -41,7 +41,10 @@ public class RobotContainer {
   private final Limit_Switch _limitSwitch = new Limit_Switch(0);
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
-    private SendableChooser<Command> _chooser = new SendableChooser<Command>();
+  private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private SendableChooser<String> allianceChooser = new SendableChooser<String>();
+
+
   private NetworkTableInstance netInst;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -52,13 +55,16 @@ public class RobotContainer {
     
     new LimitSwitch(_limitSwitch).schedule();
 
-      _chooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
-      _chooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
-      _chooser.addOption("Score In Amp (Red)", new AAmpRed(_drive_Train,_intakeBar, _intakeBelt, _trapRollers,netInst));
+      autoChooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
+      autoChooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
+      autoChooser.addOption("Score in Amp", new AScoreInAmp(_drive_Train, _intakeBar, _intakeBelt, _trapRollers, netInst));
+      SmartDashboard.putData("Auto Choices", autoChooser);
 
+      allianceChooser.setDefaultOption("!!SELECT ALLIANCE!!", "none");
+      allianceChooser.addOption("Blue", "blue");
+      allianceChooser.addOption("Red", "red");
 
-      SmartDashboard.putData("Auto choices", _chooser);
-
+      SmartDashboard.putData("Alliance Color", allianceChooser);
   }
 
   /**
@@ -70,6 +76,11 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  public String getAlliance(){
+    return allianceChooser.getSelected();
+  }
+
   private void configureBindings() {
     _operator
       .leftBumper()
@@ -110,6 +121,9 @@ public class RobotContainer {
       _operator 
       .a()
       .whileTrue(new RunCommand(_trapRollers::TrapRollersIn, _trapRollers));
+      _driver 
+      .start()
+      .whileTrue(new RunCommand(_drive_Train::encoderReset, _drive_Train));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -118,6 +132,6 @@ public class RobotContainer {
   */ 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return _chooser.getSelected();
+    return autoChooser.getSelected();
   }
 }

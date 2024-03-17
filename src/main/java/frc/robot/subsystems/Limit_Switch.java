@@ -19,6 +19,6 @@ public class Limit_Switch extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Limit Switch", limitSwitch.get());
+    //SmartDashboard.putBoolean("Limit Switch", limitSwitch.get());
   }
 }
