@@ -108,7 +108,7 @@ public class AScoreInAmp extends Command {
         switch(state) {
             case MOVE_TO_AUTO_LINE:
                 _drive.drive(0.5, 0.0);
-                if(encoder>=1.0){ //ENCDR
+                if(encoder >= 1.0){ //ENCDR
                     changeState(State.AUTOROTATE);
                 }
                 break;
@@ -118,15 +118,15 @@ public class AScoreInAmp extends Command {
                 } else {
                     _drive.drive(0,0.31);
                 }
-                if(encoder>=1.7){ //ENCDR
+                if(encoder >= 1.7){ //ENCDR
                     changeState(State.TAXI_NO_APRILTAG);
-                } else if(numTargets>0){/* num targets is greater than 0 */
+                } else if(numTargets > 0){/* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
                 break;
             case TAXI_NO_APRILTAG:
                 _drive.drive(0.4,0.0);
-                if(encoder>=1.0){ //ENCDR
+                if(encoder >= 1.0){ //ENCDR
                     changeState(State.END);
                 }
             case ADJUST_POSITION:
