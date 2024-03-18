@@ -8,6 +8,8 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +42,8 @@ public class RobotContainer {
   private final Intake_Belt _intakeBelt = new Intake_Belt(){};
   private final Trap_Rollers _trapRollers = new Trap_Rollers();
   private final Limit_Switch _limitSwitch = new Limit_Switch(0);
+  private AddressableLED m_led = new AddressableLED(9); //TODO Replace with port number
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60); //TODO Replace with length number
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -56,17 +60,22 @@ public class RobotContainer {
     
     new LimitSwitch(_limitSwitch).schedule();
 
-      autoChooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
-      autoChooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
-      autoChooser.addOption("Score in Amp", new AScoreInAmp(_drive_Train, _intakeBar, _intakeBelt, _trapRollers, netInst));
-      SmartDashboard.putData("Auto Choices", autoChooser);
+    autoChooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
+    autoChooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
+    autoChooser.addOption("Score in Amp", new AScoreInAmp(_drive_Train, _intakeBar, _intakeBelt, _trapRollers, netInst));
+    SmartDashboard.putData("Auto Choices", autoChooser);
 
-      allianceChooser.setDefaultOption("!!SELECT ALLIANCE!!", "none");
-      allianceChooser.addOption("Blue", "blue");
-      allianceChooser.addOption("Red", "red");
+    allianceChooser.setDefaultOption("!!SELECT ALLIANCE!!", "none");
+    allianceChooser.addOption("Blue", "blue");
+    allianceChooser.addOption("Red", "red");
 
-      SmartDashboard.putData("Alliance Color", allianceChooser);
-      SmartDashboard.putString("Team Station", DriverStation.getAlliance().toString() + " (" + DriverStation.getLocation() + ")");
+
+    SmartDashboard.putData("Alliance Color", allianceChooser);
+    SmartDashboard.putString("Team Station", DriverStation.getAlliance().toString() + " (" + DriverStation.getLocation() + ")");
+
+    m_led.setLength(m_ledBuffer.getLength());
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   /**
