@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
@@ -65,6 +66,7 @@ public class RobotContainer {
       allianceChooser.addOption("Red", "red");
 
       SmartDashboard.putData("Alliance Color", allianceChooser);
+      SmartDashboard.putString("Team Station", DriverStation.getAlliance().toString() + " (" + DriverStation.getLocation() + ")");
   }
 
   /**

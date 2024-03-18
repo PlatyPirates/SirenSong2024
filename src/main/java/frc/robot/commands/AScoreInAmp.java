@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -81,7 +82,8 @@ public class AScoreInAmp extends Command {
 
     public void setAlliance(String inputAlliance) {
         alliance = inputAlliance;
-        isBlue = alliance.equals("blue");
+        //isBlue = alliance.equals("blue");
+        isBlue = (DriverStation.getAlliance().toString().equals("Blue"));
     }
     // Called when the command is initially scheduled.
     @Override
