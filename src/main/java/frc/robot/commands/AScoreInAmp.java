@@ -90,7 +90,7 @@ public class AScoreInAmp extends Command {
     public void initialize(){
         startTime = Timer.getFPGATimestamp();
         changeState(State.MOVE_TO_AUTO_LINE);
-        SmartDashboard.putBoolean("Auto Status", false);
+        isBlue = DriverStation.getAlliance().toString().equals("Blue");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -104,120 +104,169 @@ public class AScoreInAmp extends Command {
         double encoder = Math.abs(_drive.getLeftEncoder());
 
         SmartDashboard.putNumber("State Time", elapsedStateTime);
-        SmartDashboard.putNumber("Auto Time", startTime-currentTime);
+        SmartDashboard.putNumber("Auto Time", (startTime - currentTime));
         SmartDashboard.putString("Autonomous State", state.toString());
 
         switch(state) {
             case MOVE_TO_AUTO_LINE:
                 _drive.drive(0.5, 0.0);
-                if(encoder >= 1.0){ //ENCDR
+
+                if (encoder >= 1.0) {
                     changeState(State.AUTOROTATE);
                 }
                 break;
+
             case AUTOROTATE:
-                if(isBlue){
+                if (isBlue) {
                     _drive.drive(0,-0.31);
-                } else {
+                }
+                else {
                     _drive.drive(0,0.31);
                 }
-                if(encoder >= 1.7){ //ENCDR
+
+                if (encoder >= 1.7) {
+                    /* encoder value >= one rotation */
                     changeState(State.TAXI_NO_APRILTAG);
-                } else if(numTargets > 0){/* num targets is greater than 0 */
+                }
+                else if (numTargets > 0) {
+                    /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
                 break;
+
             case TAXI_NO_APRILTAG:
                 _drive.drive(0.4,0.0);
-                if(encoder >= 1.0){ //ENCDR
+                if (encoder >= 1.0) {
                     changeState(State.END);
                 }
+                break;
+
             case ADJUST_POSITION:
-                if (centerTagX < (long)centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) { // if the tag is left of center
+                if (centerTagX < (long)centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) {
+                    /* if the tag is left of center */
                     _drive.drive(0, -0.4);
-                } else if((long)centerTagX > centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) { // if the tag is right of center
+                }
+                else if((long)centerTagX > centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) {
+                    /* if the tag is right of center */
                     _drive.drive(0, 0.4);
                 }
-                if(numTargets <= 0) {//number of targets is less than or equal to 0 
+
+                if (numTargets <= 0) {
+                    /* number of targets is less than or equal to 0 */
                     changeState(State.LOOK_LEFT);
-                } else if(Math.abs(centerImageX-(long)centerTagX) <= tolerance){ //target is centered
+                }
+                else if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) {
+                    /* target is centered */
                     changeState(State.GO_TO_APRILTAG);
                 }
                 break;
+
             case GO_TO_APRILTAG:
-                if(numTargets > 0){
-                    if(Math.abs(centerImageX-(long)centerTagX) <= tolerance){
-                        _drive.drive(0.5, 0.0);
-                    } else if (centerTagX < (long)centerImageX) { // if the tag is left of center
-                        _drive.drive(0, -0.4);
-                    } else if((long)centerTagX > centerImageX) { // if the tag is right of center
-                        _drive.drive(0, 0.4);
-                    }
+                if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) {
+                    _drive.drive(0.5, 0.0);
                 }
-                else { //num targets is less than or equal to 0
+                else if (centerTagX < (long)centerImageX) {
+                    /* if the tag is left of center */
+                    _drive.drive(0, -0.4);
+                }
+                else if((long)centerTagX > centerImageX) {
+                    /* if the tag is right of center */
+                    _drive.drive(0, 0.4);
+                }
+
+                if (numTargets <= 0) {
+                    /* num targets is less than or equal to 0 */
                     changeState(State.SCOOCH_TO_SCORE);
                 }
                 break;
+
             case SCOOCH_TO_SCORE:
                 _drive.drive(0.5, 0.0);
-                if(encoder >= 1.0){ //ENCDR
+
+                if (encoder >= 1.0) {
                     changeState(State.SCORE);
                 }
                 break;
+
             case SCORE:
                 intakeBar.IntakeBarIn();
                 intakeBelt.IntakeBeltIn();
-                if(elapsedStateTime >= 1.0){ //timer has elapsed
+
+                if (elapsedStateTime >= 1.0) {
+                    /* timer has elapsed */
                     changeState(State.BACK_UP);
                 }
                 break;
+
             case BACK_UP:
-                if(isBlue){
+                if (isBlue) {
                     _drive.drive(-0.2,0.2);
-                } else {
+                }
+                else {
                     _drive.drive(-0.2,-0.2);
                 }
-               
-                if(encoder >= 0.5){ //ENCDR
+
+                if (encoder >= 0.5) {
                     changeState(State.TAXI_WITH_APRILTAG);
                 }
+                break;
+
             case TAXI_WITH_APRILTAG:
                 _drive.drive(-0.5,0.0);
-                if(encoder >= 1.5){ //ENCDR
+
+                if (encoder >= 1.5) {
                     changeState(State.END);
                 }
                 break;
+
             case LOOK_LEFT:
                 _drive.drive(0.0,-0.3);
-                if(numTargets > 0){ //num targets is greater than 0
+
+                if (numTargets > 0) {
+                    /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
-                } else if(encoder >= 0.5){ //ENCDR
+                }
+                else if(encoder >= 0.5) {
                     changeState(State.LOOK_RIGHT);
                 }
                 break;
+
             case LOOK_RIGHT:
                 _drive.drive(0.0,0.3);
-                if(numTargets > 0){ //num targets is greater than 0
+
+                if (numTargets > 0) {
+                    /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
-                } else if(encoder >= 1.0){ //ENCDR
+                }
+                else if (encoder >= 1.0) {
                     changeState(State.RECENTER);
                 }
                 break;
+
             case RECENTER:
                 _drive.drive(0.0,-0.3);
-                if(numTargets > 0){ //num targets is greater than 0
+
+                if (numTargets > 0) {
+                    /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
-                } else if(encoder >= 0.25){ //ENCDR
+                }
+                else if (encoder >= 0.25) {
                     changeState(State.SCOOCH_TO_FIND);
                 }
                 break;
+
             case SCOOCH_TO_FIND:
                 _drive.drive(0.4,0.0);
-                if(numTargets > 0){
+
+                if (numTargets > 0) {
+                    /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
-                } else if(encoder > 0.4){ //ENCDR
+                }
+                else if (encoder > 0.4) {
                     changeState(State.LOOK_LEFT);
                 }
                 break;
+
             case END:
                 //give some indication that it (thinks) it's done
                 SmartDashboard.putBoolean("Status", true);
