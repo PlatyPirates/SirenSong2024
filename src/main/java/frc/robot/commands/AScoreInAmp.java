@@ -90,7 +90,10 @@ public class AScoreInAmp extends Command {
     public void initialize(){
         startTime = Timer.getFPGATimestamp();
         changeState(State.MOVE_TO_AUTO_LINE);
-        isBlue = DriverStation.getAlliance().toString().equals("Blue");
+        _drive.encoderReset();
+        isBlue = DriverStation.getAlliance().toString().equals("Optional[Blue]");
+        SmartDashboard.putBoolean("IsBlue", isBlue);
+        SmartDashboard.putBoolean("Auto Status", false);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -101,30 +104,32 @@ public class AScoreInAmp extends Command {
         long numTargets = numTargetsSub.get();
         double currentTime = Timer.getFPGATimestamp();
         elapsedStateTime = currentTime - stateStartTime;
-        double encoder = Math.abs(_drive.getLeftEncoder());
+
+        double encL = Math.abs(_drive.getLeftEncoder());
+        double encR = Math.abs(_drive.getRightEncoder());
 
         SmartDashboard.putNumber("State Time", elapsedStateTime);
         SmartDashboard.putNumber("Auto Time", (startTime - currentTime));
         SmartDashboard.putString("Autonomous State", state.toString());
-
+  
         switch(state) {
             case MOVE_TO_AUTO_LINE:
                 _drive.drive(0.5, 0.0);
 
-                if (encoder >= 1.0) {
+                if (encL >= 0.4761 && encR >= 0.4788) {
                     changeState(State.AUTOROTATE);
                 }
                 break;
 
             case AUTOROTATE:
-                if (isBlue) {
-                    _drive.drive(0,-0.31);
+                if (!isBlue) {
+                    _drive.drive(0,-0.3);
                 }
                 else {
-                    _drive.drive(0,0.31);
+                    _drive.drive(0,0.3);
                 }
 
-                if (encoder >= 1.7) {
+                if ( (!isBlue && encL >= 1.7689 && encR >= -1.789) || (isBlue && encR >= 1.7689 && encL >= 1.789) ) {
                     /* encoder value >= one rotation */
                     changeState(State.TAXI_NO_APRILTAG);
                 }
@@ -136,7 +141,7 @@ public class AScoreInAmp extends Command {
 
             case TAXI_NO_APRILTAG:
                 _drive.drive(0.4,0.0);
-                if (encoder >= 1.0) {
+                if (encL >= 0.6 && encR >= 0.6) {
                     changeState(State.END);
                 }
                 break;
@@ -144,11 +149,11 @@ public class AScoreInAmp extends Command {
             case ADJUST_POSITION:
                 if (centerTagX < (long)centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) {
                     /* if the tag is left of center */
-                    _drive.drive(0, -0.4);
+                    _drive.drive(0, -0.2);
                 }
                 else if((long)centerTagX > centerImageX && !(Math.abs(centerImageX-(long)centerTagX) <= tolerance)) {
                     /* if the tag is right of center */
-                    _drive.drive(0, 0.4);
+                    _drive.drive(0, 0.2);
                 }
 
                 if (numTargets <= 0) {
@@ -163,16 +168,16 @@ public class AScoreInAmp extends Command {
 
             case GO_TO_APRILTAG:
                 if (Math.abs(centerImageX-(long)centerTagX) <= tolerance) {
-                    _drive.drive(0.5, 0.0);
+                        _drive.drive(0.4, 0.0);
                 }
                 else if (centerTagX < (long)centerImageX) {
                     /* if the tag is left of center */
-                    _drive.drive(0, -0.4);
+                        _drive.drive(0, -0.4);
                 }
                 else if((long)centerTagX > centerImageX) {
                     /* if the tag is right of center */
-                    _drive.drive(0, 0.4);
-                }
+                        _drive.drive(0, 0.4);
+                    }
 
                 if (numTargets <= 0) {
                     /* num targets is less than or equal to 0 */
@@ -183,7 +188,7 @@ public class AScoreInAmp extends Command {
             case SCOOCH_TO_SCORE:
                 _drive.drive(0.5, 0.0);
 
-                if (encoder >= 1.0) {
+                if (encL >= 0.537 && encR >= 0.537) {
                     changeState(State.SCORE);
                 }
                 break;
@@ -192,29 +197,31 @@ public class AScoreInAmp extends Command {
                 intakeBar.IntakeBarIn();
                 intakeBelt.IntakeBeltIn();
 
-                if (elapsedStateTime >= 1.0) {
+                if (elapsedStateTime >= 1.7) {
                     /* timer has elapsed */
+                    intakeBar.stop();
+                    intakeBelt.stop();
                     changeState(State.BACK_UP);
                 }
                 break;
 
             case BACK_UP:
-                if (isBlue) {
-                    _drive.drive(-0.2,0.2);
+                if (!isBlue) {
+                    _drive.drive(-0.2,0.3);
                 }
                 else {
-                    _drive.drive(-0.2,-0.2);
+                    _drive.drive(-0.2,-0.3);
                 }
-
-                if (encoder >= 0.5) {
+               
+                if (encL >= 0.5753 && encR >= 1.4) {
                     changeState(State.TAXI_WITH_APRILTAG);
                 }
                 break;
 
             case TAXI_WITH_APRILTAG:
-                _drive.drive(-0.5,0.0);
+                _drive.drive(0.5,0.0);
 
-                if (encoder >= 1.5) {
+                if (encL >= 1.3237 && encR >= 1.3237) {
                     changeState(State.END);
                 }
                 break;
@@ -226,7 +233,7 @@ public class AScoreInAmp extends Command {
                     /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
-                else if(encoder >= 0.5) {
+                else if(encL >= 0.5) {
                     changeState(State.LOOK_RIGHT);
                 }
                 break;
@@ -238,7 +245,7 @@ public class AScoreInAmp extends Command {
                     /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
-                else if (encoder >= 1.0) {
+                else if (encL >= 1.0) {
                     changeState(State.RECENTER);
                 }
                 break;
@@ -250,19 +257,19 @@ public class AScoreInAmp extends Command {
                     /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
-                else if (encoder >= 0.25) {
+                else if (encL >= 0.25) {
                     changeState(State.SCOOCH_TO_FIND);
                 }
                 break;
 
             case SCOOCH_TO_FIND:
-                _drive.drive(0.4,0.0);
+                _drive.drive(0.3,0.0);
 
                 if (numTargets > 0) {
                     /* num targets is greater than 0 */
                     changeState(State.ADJUST_POSITION);
                 }
-                else if (encoder > 0.4) {
+                else if (encL > 0.2 && encR > 0.2) {
                     changeState(State.LOOK_LEFT);
                 }
                 break;

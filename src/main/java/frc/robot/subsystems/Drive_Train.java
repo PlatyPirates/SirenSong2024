@@ -154,6 +154,10 @@ public class Drive_Train extends SubsystemBase {
     _leftEncoder = _fLMotor.getEncoder();
     return -_leftEncoder.getPosition();
   }
+  public double getRightEncoder() {
+    _rightEncoder = _fRMotor.getEncoder();
+    return -_rightEncoder.getPosition();
+  }
 
   public void stop(){
     _fLMotor.stopMotor();

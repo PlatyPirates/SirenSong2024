@@ -73,7 +73,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+      SmartDashboard.putNumber("Left Encoder", m_robotContainer._drive_Train.getLeftEncoder());
+      SmartDashboard.putNumber("Right Encoder", m_robotContainer._drive_Train.getRightEncoder());
+  }
 
   @Override
   public void teleopInit() {
@@ -97,7 +100,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Encoder Position", m_robotContainer._drive_Train.getLeftEncoder());
+    SmartDashboard.putNumber("Left Encoder", m_robotContainer._drive_Train.getLeftEncoder());
+    SmartDashboard.putNumber("Right Encoder", m_robotContainer._drive_Train.getRightEncoder());
   }
 
   @Override
