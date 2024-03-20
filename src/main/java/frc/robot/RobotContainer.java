@@ -114,13 +114,13 @@ public class RobotContainer {
       .whileTrue(new RunCommand(_intakeBar::IntakeBarIn, _intakeBar))
       .whileTrue(new RunCommand(_intakeBelt::IntakeBeltOut, _intakeBelt));
     //y for getting it up there 
-      _operator 
+      _driver 
       .y()
       .whileTrue(new RunCommand(_intakeBelt::TrapBelt, _intakeBelt))
       .whileTrue(new RunCommand(_intakeBar::TrapBar, _intakeBar))
       .whileTrue(new RunCommand(_trapRollers::TrapScoreRollers, _trapRollers));
       //A for shooting (digital input limit switch)
-      _operator 
+      _driver 
       .a()
       .whileTrue(new RunCommand(_trapRollers::TrapRollersIn, _trapRollers));
       _driver 
