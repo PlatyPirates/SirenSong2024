@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -34,6 +36,16 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    AddressableLED m_led = new AddressableLED(9); // PWM port 9
+    AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(150); // Our full LED strip length
+    m_led.setLength(m_ledBuffer.getLength());
+
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 119,15,5);
+    }
+    m_led.setData(m_ledBuffer);
+    m_led.start();
     //CameraServer.startAutomaticCapture();
   }
 
@@ -93,7 +105,7 @@ public class Robot extends TimedRobot {
       Commands.run(
         () ->
         m_robotContainer._drive_Train.drive(
-                -m_robotContainer._driver.getLeftY(), m_robotContainer._driver.getRightX()),
+                -m_robotContainer._driver.getLeftY(), m_robotContainer._driver.getRightX()*0.5),
                 m_robotContainer._drive_Train));
   }
 

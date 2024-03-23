@@ -91,7 +91,7 @@ public class AScoreInAmp extends Command {
         startTime = Timer.getFPGATimestamp();
         changeState(State.MOVE_TO_AUTO_LINE);
         _drive.encoderReset();
-        isBlue = DriverStation.getAlliance().toString().equals("Optional[Blue]");
+        isBlue = !DriverStation.getAlliance().toString().equals("Optional[Blue]");
         SmartDashboard.putBoolean("IsBlue", isBlue);
         SmartDashboard.putBoolean("Auto Status", false);
     }
@@ -123,10 +123,10 @@ public class AScoreInAmp extends Command {
 
             case AUTOROTATE:
                 if (!isBlue) {
-                    _drive.drive(0,-0.3);
+                    _drive.drive(0,-0.32);
                 }
                 else {
-                    _drive.drive(0,0.3);
+                    _drive.drive(0,0.32);
                 }
 
                 if ( (!isBlue && encL >= 1.7689 && encR >= -1.789) || (isBlue && encR >= 1.7689 && encL >= 1.789) ) {
