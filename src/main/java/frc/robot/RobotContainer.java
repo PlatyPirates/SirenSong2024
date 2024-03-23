@@ -126,6 +126,9 @@ public class RobotContainer {
       _driver 
       .start()
       .whileTrue(new RunCommand(_drive_Train::encoderReset, _drive_Train));
+      _driver 
+      .x()
+      .whileTrue(new RunCommand(_trapRollers::TrapRollersOut, _trapRollers));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
