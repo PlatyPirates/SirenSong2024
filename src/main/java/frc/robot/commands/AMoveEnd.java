@@ -31,6 +31,7 @@ public class AMoveEnd extends Command {
     @Override
     public void execute(){
         _drive.drive(0.5,0);
+
     }
     // Called once the command ends or is interrupted.
     @Override

@@ -79,6 +79,13 @@ public class Drive_Train extends SubsystemBase {
     _fRMotor.burnFlash();
   }
 
+  public void stop(){
+    _fLMotor.stopMotor();
+    _fRMotor.stopMotor();
+    _bLMotor.stopMotor();
+    _bRMotor.stopMotor();
+  }
+
   public void enableOpenLoopRampRate(boolean enable) {
     double rampRate = (enable ? Constants.DrivetrainConstants.rampRate : 0.0);
 
@@ -153,13 +160,6 @@ public class Drive_Train extends SubsystemBase {
   public double getLeftEncoder() {
     _leftEncoder = _fLMotor.getEncoder();
     return -_leftEncoder.getPosition();
-  }
-
-  public void stop(){
-    _fLMotor.stopMotor();
-    _fRMotor.stopMotor();
-    _bLMotor.stopMotor();
-    _bRMotor.stopMotor();
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
