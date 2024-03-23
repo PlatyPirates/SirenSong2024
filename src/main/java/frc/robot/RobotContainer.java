@@ -39,7 +39,7 @@ public class RobotContainer {
   private final Intake_Bar _intakeBar = new Intake_Bar();
   private final Intake_Belt _intakeBelt = new Intake_Belt(){};
   private final Trap_Rollers _trapRollers = new Trap_Rollers();
-  private final Limit_Switch _limitSwitch = new Limit_Switch(0);
+  private final Limit_Switch _limitSwitch = new Limit_Switch(9);
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();

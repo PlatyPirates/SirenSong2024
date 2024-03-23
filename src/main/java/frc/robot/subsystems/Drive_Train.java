@@ -90,7 +90,7 @@ public class Drive_Train extends SubsystemBase {
 
   public void teleopDrive(Joystick driveControl) {
     double forward = applyCubic(driveControl.getRawAxis(JoystickConstants.LEFT_STICK_Y));
-    double turn = applyCubic(driveControl.getRawAxis(JoystickConstants.RIGHT_STICK_X));
+    double turn = applyCubic(driveControl.getRawAxis(JoystickConstants.RIGHT_STICK_X)*.5);
 
     // might need to be inverted
     _drive.arcadeDrive(forward, turn);

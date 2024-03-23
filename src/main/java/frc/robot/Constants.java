@@ -62,7 +62,7 @@ public final class Constants {
     public static final double intakeBeltMotorPower = 0.6;
     public static final int trapRollerMotor = 9;
     public static final double trapRollerMotorPower = -0.3;
-    public static final int switchPort = 0; 
+    public static final int switchPort = 9;
     //public static final int pivotMotor = 6;
     //public static final double pivotMotorPower = 0.2;
     //public static final int armMotor = 7;
