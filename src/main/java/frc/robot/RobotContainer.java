@@ -43,7 +43,6 @@ public class RobotContainer {
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private SendableChooser<String> allianceChooser = new SendableChooser<String>();
 
 
   private NetworkTableInstance netInst;
@@ -53,6 +52,13 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     netInst = NetworkTableInstance.getDefault();
+
+    _drive_Train.setDefaultCommand(
+      Commands.run(
+        () ->
+        _drive_Train.drive(
+                -_driver.getLeftY(), _driver.getRightX()*0.5),
+                _drive_Train));
     
     new LimitSwitch(_limitSwitch).schedule();
 
@@ -61,11 +67,6 @@ public class RobotContainer {
       autoChooser.addOption("Score in Amp", new AScoreInAmp(_drive_Train, _intakeBar, _intakeBelt, _trapRollers, netInst));
       SmartDashboard.putData("Auto Choices", autoChooser);
 
-      allianceChooser.setDefaultOption("!!SELECT ALLIANCE!!", "none");
-      allianceChooser.addOption("Blue", "blue");
-      allianceChooser.addOption("Red", "red");
-
-      SmartDashboard.putData("Alliance Color", allianceChooser);
       SmartDashboard.putString("Team Station", DriverStation.getAlliance().toString() + " (" + DriverStation.getLocation() + ")");
   }
 
@@ -79,9 +80,6 @@ public class RobotContainer {
    * joysticks}.
    */
 
-  public String getAlliance(){
-    return allianceChooser.getSelected();
-  }
 
   private void configureBindings() {
     _operator

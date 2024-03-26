@@ -99,14 +99,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-  
-    m_robotContainer._drive_Train.setDefaultCommand(
-      Commands.run(
-        () ->
-        m_robotContainer._drive_Train.drive(
-                -m_robotContainer._driver.getLeftY(), m_robotContainer._driver.getRightX()*0.5),
-                m_robotContainer._drive_Train));
   }
 
   /** This function is called periodically during operator control. */
