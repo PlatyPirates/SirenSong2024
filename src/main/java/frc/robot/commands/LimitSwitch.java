@@ -23,7 +23,7 @@ public class LimitSwitch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("Limit Switch State", _limitSwitch.isPressed());
+    SmartDashboard.putBoolean("Lim. Switch", _limitSwitch.isPressed());
   }
 
   // Called once the command ends or is interrupted.

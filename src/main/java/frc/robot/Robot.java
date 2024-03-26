@@ -4,14 +4,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Limit_Switch;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,6 +38,16 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    AddressableLED m_led = new AddressableLED(9); // PWM port 9
+    AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(150); // Our full LED strip length
+    m_led.setLength(m_ledBuffer.getLength());
+
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 119,15,5);
+    }
+    m_led.setData(m_ledBuffer);
+    m_led.start();
     //CameraServer.startAutomaticCapture();
   }
 
@@ -71,7 +86,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+      SmartDashboard.putNumber("Left Encoder", m_robotContainer._drive_Train.getLeftEncoder());
+      SmartDashboard.putNumber("Right Encoder", m_robotContainer._drive_Train.getRightEncoder());
+  }
 
   @Override
   public void teleopInit() {
@@ -82,11 +100,21 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+  
+    m_robotContainer._drive_Train.setDefaultCommand(
+      Commands.run(
+        () ->
+        m_robotContainer._drive_Train.drive(
+                -m_robotContainer._driver.getLeftY()*0.8, m_robotContainer._driver.getRightX()*0.5),
+                m_robotContainer._drive_Train));
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Left Encoder", m_robotContainer._drive_Train.getLeftEncoder());
+    SmartDashboard.putNumber("Right Encoder", m_robotContainer._drive_Train.getRightEncoder());
   }
 
   @Override

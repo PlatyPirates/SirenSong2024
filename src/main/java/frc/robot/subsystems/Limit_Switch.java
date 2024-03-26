@@ -13,12 +13,12 @@ public class Limit_Switch extends SubsystemBase {
   public Limit_Switch(int channel) {
     limitSwitch = new DigitalInput(channel);
   }
-  public boolean isPressed(){
+  public static boolean isPressed(){
     return limitSwitch.get();
   }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Limit Switch", limitSwitch.get());
+    //SmartDashboard.putBoolean("Limit Switch", limitSwitch.get());
   }
 }

@@ -72,7 +72,7 @@ public abstract class Intake_Belt extends SubsystemBase {
   @Override
   public void periodic() {
     //figure out how to get the shuffleboard to output the position of the encoder here
-    SmartDashboard.putNumber("Intake Motor", encoder.getPosition());
+    //SmartDashboard.putNumber("Intake Motor", encoder.getPosition());
   }
   
   /**
