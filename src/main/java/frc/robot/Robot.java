@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
       Commands.run(
         () ->
         m_robotContainer._drive_Train.drive(
-                -m_robotContainer._driver.getLeftY(), m_robotContainer._driver.getRightX()*0.5),
+                -m_robotContainer._driver.getLeftY()*0.8, m_robotContainer._driver.getRightX()*0.5),
                 m_robotContainer._drive_Train));
   }
 
