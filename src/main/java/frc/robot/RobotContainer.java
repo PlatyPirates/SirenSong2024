@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+//import frc.robot.commands.Autos;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
