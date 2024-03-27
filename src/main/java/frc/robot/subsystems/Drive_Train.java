@@ -20,6 +20,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.JoystickConstants;
 //import frc.robot.util.Settings;
+import frc.robot.RobotContainer;
 
 public class Drive_Train extends SubsystemBase {
 
@@ -98,6 +99,10 @@ public class Drive_Train extends SubsystemBase {
 
   public void drive(double forward, double turn) {
     _drive.arcadeDrive(forward, turn);
+  }
+
+  public void switchControls(){
+    RobotContainer.switchControls();
   }
 
   private double applyDeadband(double value) {

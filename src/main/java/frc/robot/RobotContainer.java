@@ -40,6 +40,7 @@ public class RobotContainer {
   private final Intake_Belt _intakeBelt = new Intake_Belt(){};
   private final Trap_Rollers _trapRollers = new Trap_Rollers();
   private final Limit_Switch _limitSwitch = new Limit_Switch(9);
+  private static int driveConstant = 1;
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -57,7 +58,7 @@ public class RobotContainer {
       Commands.run(
         () ->
         _drive_Train.drive(
-                -_driver.getLeftY(), _driver.getRightX()*0.5),
+                -_driver.getLeftY()*driveConstant, _driver.getRightX()*0.5*driveConstant),
                 _drive_Train));
     
     new LimitSwitch(_limitSwitch).schedule();
@@ -127,12 +128,18 @@ public class RobotContainer {
       _driver 
       .x()
       .whileTrue(new RunCommand(_trapRollers::TrapRollersOut, _trapRollers));
+      _driver
+      .leftTrigger()
+      .whileTrue(new RunCommand(_drive_Train::switchControls,_drive_Train));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
   */ 
+  public static void switchControls(){
+    driveConstant *= -1;
+  }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return autoChooser.getSelected();
