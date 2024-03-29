@@ -37,7 +37,7 @@ public class AScoreInAmp extends Command {
     private Intake_Bar intakeBar;
     private Intake_Belt intakeBelt;
     private Trap_Rollers trapRollers;
-    private boolean isBlue;
+    private boolean isRed;
     private String alliance;
     private double currentTime;
     private double stateStartTime;
@@ -82,8 +82,8 @@ public class AScoreInAmp extends Command {
 
     public void setAlliance(String inputAlliance) {
         alliance = inputAlliance;
-        //isBlue = alliance.equals("blue");
-        isBlue = (DriverStation.getAlliance().toString().equals("Blue"));
+        //!isRed = alliance.equals("blue");
+        isRed = (DriverStation.getAlliance().toString().equals("Blue"));
     }
     // Called when the command is initially scheduled.
     @Override
@@ -91,8 +91,8 @@ public class AScoreInAmp extends Command {
         startTime = Timer.getFPGATimestamp();
         changeState(State.MOVE_TO_AUTO_LINE);
         _drive.encoderReset();
-        isBlue = !DriverStation.getAlliance().toString().equals("Optional[Blue]");
-        SmartDashboard.putBoolean("IsBlue", isBlue);
+        isRed = !DriverStation.getAlliance().toString().equals("Optional[Blue]");
+        SmartDashboard.putBoolean("isRed", isRed);
         SmartDashboard.putBoolean("Auto Status", false);
     }
 
@@ -122,14 +122,14 @@ public class AScoreInAmp extends Command {
                 break;
 
             case AUTOROTATE:
-                if (!isBlue) {
+                if (isRed) {
                     _drive.drive(0,-0.32);
                 }
                 else {
                     _drive.drive(0,0.32);
                 }
 
-                if ( (!isBlue && encL >= 1.7689 && encR >= -1.789) || (isBlue && encR >= 1.7689 && encL >= 1.789) ) {
+                if ( (isRed && encL >= 1.7689 && encR >= -1.789) || (!isRed && encR >= 1.7689 && encL >= 1.789) ) {
                     /* encoder value >= one rotation */
                     changeState(State.TAXI_NO_APRILTAG);
                 }
@@ -206,7 +206,7 @@ public class AScoreInAmp extends Command {
                 break;
 
             case BACK_UP:
-                if (!isBlue) {
+                if (isRed) {
                     _drive.drive(-0.2,0.3);
                 }
                 else {

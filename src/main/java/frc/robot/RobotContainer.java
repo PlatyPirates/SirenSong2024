@@ -130,7 +130,10 @@ public class RobotContainer {
       .whileTrue(new RunCommand(_trapRollers::TrapRollersOut, _trapRollers));
       _driver
       .leftTrigger()
-      .whileTrue(new RunCommand(_drive_Train::switchControls,_drive_Train));
+      .onTrue(new RunCommand(_drive_Train::switchControls,_drive_Train));
+      _driver
+      .leftTrigger()
+      .onFalse(new RunCommand(_drive_Train::switchControls,_drive_Train));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -140,6 +143,7 @@ public class RobotContainer {
   public static void switchControls(){
     driveConstant *= -1;
   }
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return autoChooser.getSelected();
