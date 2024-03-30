@@ -101,8 +101,8 @@ public class Drive_Train extends SubsystemBase {
     _drive.arcadeDrive(forward, turn);
   }
 
-  public void switchControls(){
-    RobotContainer.switchControls();
+  public void driveReverse(double forward, double turn){
+    _drive.arcadeDrive(-forward, -turn);
   }
 
 
