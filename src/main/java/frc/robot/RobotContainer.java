@@ -34,12 +34,12 @@ public class RobotContainer {
   public final CommandXboxController _driver = new CommandXboxController(0);
   private final CommandXboxController _operator = new CommandXboxController(1);
 
-  private final LeftClaw _leftClaw = new LeftClaw();
-  private final Claw _rightClaw = new RightClaw();
+  public final LeftClaw _leftClaw = new LeftClaw();
+  public final RightClaw _rightClaw = new RightClaw();
   private final Intake_Bar _intakeBar = new Intake_Bar();
   private final Intake_Belt _intakeBelt = new Intake_Belt(){};
   private final Trap_Rollers _trapRollers = new Trap_Rollers();
-  private final Limit_Switch _limitSwitch = new Limit_Switch(9);
+  public final Limit_Switch _limitSwitch = new Limit_Switch(9);
   private static int driveConstant = 1;
   private DoubleTopic centerTagX;
   private IntegerTopic centerImageX;
@@ -58,7 +58,7 @@ public class RobotContainer {
       Commands.run(
         () ->
         _drive_Train.drive(
-                -_driver.getLeftY()*driveConstant, _driver.getRightX()*0.5*driveConstant),
+                -_driver.getLeftY(), _driver.getRightX()*0.5),
                 _drive_Train));
     
     new LimitSwitch(_limitSwitch).schedule();
@@ -66,6 +66,7 @@ public class RobotContainer {
       autoChooser.setDefaultOption("Follow AprilTag", new AutonomousDrive(_drive_Train,netInst));
       autoChooser.addOption("Cross Auto Line Only", new AMoveEnd(_drive_Train));
       autoChooser.addOption("Score in Amp", new AScoreInAmp(_drive_Train, _intakeBar, _intakeBelt, _trapRollers, netInst));
+      autoChooser.addOption("Align With Trap (LEFT)", new AAlignTrapLeft(_drive_Train, _intakeBelt, _intakeBar, _trapRollers, _rightClaw, netInst));
       SmartDashboard.putData("Auto Choices", autoChooser);
 
       SmartDashboard.putString("Team Station", DriverStation.getAlliance().toString() + " (" + DriverStation.getLocation() + ")");
@@ -122,9 +123,16 @@ public class RobotContainer {
       _driver 
       .a()
       .whileTrue(new RunCommand(_trapRollers::TrapRollersIn, _trapRollers));
+      
       _driver 
       .start()
       .whileTrue(new RunCommand(_drive_Train::encoderReset, _drive_Train));
+      
+      _operator
+      .start()
+      .whileTrue(new RunCommand(_leftClaw::resetEncoder, _leftClaw))
+      .whileTrue(new RunCommand(_rightClaw::resetEncoder,_rightClaw));
+
       _driver 
       .x()
       .whileTrue(new RunCommand(_trapRollers::TrapRollersOut, _trapRollers));
@@ -133,8 +141,8 @@ public class RobotContainer {
       .whileTrue(
         Commands.run(
         () ->
-        _drive_Train.drive(
-                -_driver.getLeftY()*driveConstant, _driver.getRightX()*0.5*driveConstant),
+        _drive_Train.driveReverse(
+                -_driver.getLeftY(), _driver.getRightX()*0.5),
                 _drive_Train));
   }
   /**

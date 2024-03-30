@@ -102,7 +102,7 @@ public class Drive_Train extends SubsystemBase {
   }
 
   public void driveReverse(double forward, double turn){
-    _drive.arcadeDrive(-forward, -turn);
+    _drive.arcadeDrive(-forward, turn);
   }
 
 

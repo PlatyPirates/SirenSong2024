@@ -26,27 +26,32 @@ import frc.robot.commands.*;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(150);
+  private AddressableLED m_led = new AddressableLED(9);
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+  public void setLEDColor(int r, int g, int b){
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, r,g,b);
+    }
+    m_led.setData(m_ledBuffer);
+    m_led.start();
+  }
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    AddressableLED m_led = new AddressableLED(9); // PWM port 9
-    AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(150); // Our full LED strip length
+    m_ledBuffer = new AddressableLEDBuffer(150); // Our full LED strip length
     m_led.setLength(m_ledBuffer.getLength());
 
-    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 119,15,5);
-    }
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-    //CameraServer.startAutomaticCapture();
+    setLEDColor(119,15,5); //Burgundy
+
+    //CameraServer.startAutomaticCapture(); DO NOT UNCOMMENT
   }
 
   /**
@@ -63,6 +68,15 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    if(!m_robotContainer._limitSwitch.isPressed()){
+      setLEDColor(0,200,0);
+    } else {
+      setLEDColor(119,15,5);
+    }
+
+    SmartDashboard.putNumber("Left Claw", m_robotContainer._leftClaw.getPosition());
+    SmartDashboard.putNumber("Right Claw", m_robotContainer._rightClaw.getPosition());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -99,6 +113,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
   }
 
   /** This function is called periodically during operator control. */

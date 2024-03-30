@@ -8,11 +8,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.*;
 
 public class AAlignTrapLeft extends Command {
 
     private Drive_Train _drive;
+    private Intake_Bar intakeBar;
+    private Intake_Belt intakeBelt;
+    private Trap_Rollers trapRollers;
+    private RightClaw rightClaw;
+
     private double startTime;
     private final long tolerance = 12;
     private final DoubleTopic centerTagXTopic;
@@ -30,16 +36,23 @@ public class AAlignTrapLeft extends Command {
 
     enum State {
         TAXI,
+        LOAD,
+        DEPLOY,
         SEARCH,
         ALIGN,
         SCOOT,
+        RAISE_CLAW,
         END
     }
 
     private static State state = State.TAXI;
 
-    public AAlignTrapLeft(Drive_Train drive, NetworkTableInstance inst) {
+    public AAlignTrapLeft(Drive_Train drive, Intake_Belt inputIntakeBelt, Intake_Bar inputIntakeBar, Trap_Rollers inputTrapRollers, RightClaw inputRightClaw, NetworkTableInstance inst) {
         _drive = drive;
+        intakeBelt = inputIntakeBelt;
+        intakeBar = inputIntakeBar;
+        trapRollers = inputTrapRollers;
+        rightClaw = inputRightClaw;
 
         ninst = inst;
         centerTagXTopic = inst.getDoubleTopic("/datatable/center_of_amp_X");
@@ -50,7 +63,7 @@ public class AAlignTrapLeft extends Command {
         numTargetsSub = numTargetsTopic.subscribe(-1);
 
 
-        addRequirements(drive);
+        addRequirements(drive, intakeBelt, intakeBar, trapRollers, rightClaw);
     }
     // Called when the command is initially scheduled.
     @Override
@@ -81,23 +94,41 @@ public class AAlignTrapLeft extends Command {
   
         switch(state) {
             case TAXI:
-                _drive.drive(0.5,0.0);
+                _drive.drive(-0.5,0.0);
                 
-                if(encL >= 2.142 && encR >= 2.144){
-                    changeState(State.SEARCH);    
+                if(encL >= 1.942 && encR >= 1.944){
+                    changeState(State.LOAD);    
+                }
+                break;
+            case LOAD:
+                intakeBelt.TrapBelt();
+                intakeBar.TrapBar();
+                trapRollers.TrapScoreRollers();
+
+                if(!frc.robot.subsystems.Limit_Switch.limitSwitch.get()){
+                    changeState(State.DEPLOY);
                 }
                 break;
 
-            case SEARCH:
-                _drive.drive(0.0,0.3);
+            case DEPLOY:
+                rightClaw.ClawDown();
+                
+                if(elapsedStateTime >= 0.3){
+                    changeState(State.SEARCH);
+                }
 
-                if((encL >= 0.280 && encR >= 0.249) || numTargets > 0){
+                break;
+                
+            case SEARCH:
+                _drive.drive(0.0,-0.3);
+                if((encR >= 0.28) || numTargets > 0){
                     if(numTargets > 0){
                         changeState(State.ALIGN);
                     } else {
                         changeState(State.SCOOT);
                     }
                 }
+                
                 break;
 
             case ALIGN:
@@ -114,9 +145,16 @@ public class AAlignTrapLeft extends Command {
                 break;
 
             case SCOOT:
-                _drive.drive(0.3,0.0);
+                _drive.drive(-0.3,0.0);
                 
-                if(encL >= 0.8 && encR >= 0.8){
+                if(encL >= 0.65 && encR >= 0.65){
+                    changeState(State.RAISE_CLAW);
+                }
+                break;
+            
+            case RAISE_CLAW:
+                rightClaw.ClawUp();
+                if(elapsedStateTime >= 0.3){
                     changeState(State.END);
                 }
                 break;
@@ -132,6 +170,7 @@ public class AAlignTrapLeft extends Command {
         stateStartTime = Timer.getFPGATimestamp();
         _drive.encoderReset();
         state = inputState;
+        rightClaw.stop();
     }
 
     @Override
